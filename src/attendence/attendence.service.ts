@@ -37,14 +37,10 @@ export class AttendenceService {
 
   async update(id: string, updateAttendenceDto: UpdateAttendenceDto) {
 
-    console.log(id,updateAttendenceDto)
-
     const resp = await this.prisma.attendence.update({
 
       where:{attendence_id : id},
       data:{...updateAttendenceDto}})
-
-    console.log(id,"--->>>")
 
     return resp
   }

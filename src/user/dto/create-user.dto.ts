@@ -16,7 +16,14 @@ export class CreateUserDto {
   @ApiProperty({ required: true })
   password: string;
 
-  @ApiProperty({ required: true })
+  @ApiProperty({ required: false })
+  boss1: string;
+  @ApiProperty({ required: false })
+  boss2: string;
+  @ApiProperty({ required: false })
+  boss3: string;
+
+  @ApiProperty({ required: false })
   joining_date: bigint;
 
   @ApiProperty()

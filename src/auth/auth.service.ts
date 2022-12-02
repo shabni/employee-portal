@@ -1,8 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { throwError } from 'rxjs';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { LogInDto } from './dto/create-auth.dto';
-import { UpdateAuthDto } from './dto/update-auth.dto';
+import { LogInDto, logInUserDto, logOutUserDto } from './dto/create-auth.dto';
 
 @Injectable()
 export class AuthService {
@@ -18,26 +17,29 @@ export class AuthService {
       });
 
       if (user.userName === LogInDto.userName && user.password === LogInDto.password){
+
+        this.updateUser(user.user_id,{is_LoggedIn:true})
+        user.is_LoggedIn=true
         return user
       }
       else throwError
+      }
+
+    async LogOut(logOutUserDto: logOutUserDto) {
+      this.updateUser(logOutUserDto.user_id,{is_LoggedIn:false})
   }
 
-  
 
-  findAll() {
-    return `This action returns all auth`;
+
+  async updateUser(id: string, logInUserDto: logInUserDto) {
+
+    const resp = await this.prisma.user.update({
+
+      where:{user_id : id},
+      data:{...logInUserDto}})
+
+    return resp
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} auth`;
-  }
 
-  update(id: number, updateAuthDto: UpdateAuthDto) {
-    return `This action updates a #${id} auth`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} auth`;
-  }
 }

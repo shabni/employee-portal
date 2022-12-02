@@ -7,3 +7,13 @@ export class LogInDto {
     @ApiProperty()
     password: string
 }
+
+export class logInUserDto {
+    @ApiProperty()
+    is_LoggedIn: boolean
+}
+
+export class logOutUserDto {
+    @ApiProperty()
+    user_id: string
+}

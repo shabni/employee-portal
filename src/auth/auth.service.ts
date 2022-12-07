@@ -16,16 +16,21 @@ export class AuthService {
         },
       });
 
-      if (user.userName === LogInDto.userName && user.password === LogInDto.password){
+      if (user.is_LoggedIn)
+      {
+        return user
+      }
+
+      else if (user.userName === LogInDto.userName && user.password === LogInDto.password){
 
         this.updateUser(user.user_id,{is_LoggedIn:true})
         user.is_LoggedIn=true
         return user
       }
       else throwError
-      }
+  }
 
-    async LogOut(logOutUserDto: logOutUserDto) {
+  async LogOut(logOutUserDto: logOutUserDto) {
       this.updateUser(logOutUserDto.user_id,{is_LoggedIn:false})
   }
 

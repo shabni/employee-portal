@@ -16,6 +16,13 @@ export class AuthService {
         },
       });
 
+      if (user.is_CheckedIn)
+      {
+        let x = await this.findUserAttendenceTime(user.user_id)
+        user['attendence_date'] = x['attendence_date']
+        user['check_in_time'] = x['check_in_time']
+      }
+
       if (user.is_LoggedIn)
       {
         return user
@@ -46,5 +53,13 @@ export class AuthService {
     return resp
   }
 
+  async findUserAttendenceTime(id: string) {
 
+    const attendence = await this.prisma.attendence.findMany({
+      where: {
+        user_Id: id
+      }
+    });
+    return attendence[attendence.length-1]
+  }
 }

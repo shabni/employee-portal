@@ -27,7 +27,7 @@ export class AttendenceService {
     let id = await  this.prisma.attendence.findFirst({
       select: {attendence_id:true},
       where: { AND:[ {user_Id:  createCheckoutDto.user_Id , attendence_date: createCheckoutDto.attendence_date}]} })
-      this.userService.updateUser(createCheckoutDto.user_Id,{is_CheckedIn:true})
+      this.userService.updateUser(createCheckoutDto.user_Id,{is_CheckedIn:false})
       
     return this.update(id['attendence_id'], {check_out_time :createCheckoutDto['check_out_time']})
   }

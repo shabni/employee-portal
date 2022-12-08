@@ -5,14 +5,14 @@ import { CreateAttendenceDto } from './dto/create-attendence.dto';
 import { UpdateAttendenceDto } from './dto/update-attendence.dto';
 import { createCheckoutDto } from './dto/checkout-attendence.dto';
 
-@Controller('attendence')
+@Controller('api/attendence')
 @ApiTags('attendence')
 export class AttendenceController {
   constructor(private readonly attendenceService: AttendenceService) {}
 
   @Post('/chechIn')
-  create(@Body() createAttendenceDto: CreateAttendenceDto) {
-    return this.attendenceService.create(createAttendenceDto);
+  checkIn(@Body() createAttendenceDto: CreateAttendenceDto) {
+    return this.attendenceService.checkIn(createAttendenceDto);
   }
 
   @Post('/chechOut')

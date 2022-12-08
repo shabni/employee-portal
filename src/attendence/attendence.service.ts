@@ -10,7 +10,7 @@ export class AttendenceService {
 
   constructor(private prisma: PrismaService) {}
 
-  create(createAttendenceDto: CreateAttendenceDto) {
+  checkIn(createAttendenceDto: CreateAttendenceDto) {
     return this.prisma.attendence.create({data:{
       attendence_id: MakeTimedIDUnique(),
       ...createAttendenceDto,

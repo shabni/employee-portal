@@ -4,13 +4,17 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateAttendenceDto } from './dto/create-attendence.dto';
 import { UpdateAttendenceDto } from './dto/update-attendence.dto';
 import { createCheckoutDto } from './dto/checkout-attendence.dto';
+import { UserService } from 'src/user/user.service';
 
 @Injectable()
 export class AttendenceService {
 
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService, private readonly userService: UserService) {}
 
   checkIn(createAttendenceDto: CreateAttendenceDto) {
+
+    this.userService.updateUser(createAttendenceDto.user_Id,{is_CheckedIn:true})
+
     return this.prisma.attendence.create({data:{
       attendence_id: MakeTimedIDUnique(),
       ...createAttendenceDto,
@@ -23,12 +27,22 @@ export class AttendenceService {
     let id = await  this.prisma.attendence.findFirst({
       select: {attendence_id:true},
       where: { AND:[ {user_Id:  createCheckoutDto.user_Id , attendence_date: createCheckoutDto.attendence_date}]} })
+      this.userService.updateUser(createCheckoutDto.user_Id,{is_CheckedIn:true})
       
     return this.update(id['attendence_id'], {check_out_time :createCheckoutDto['check_out_time']})
   }
 
   getUserAttendence(id: string) {
-    return this.prisma.attendence.findMany({ where: { user_Id: id } });
+    return this.prisma.attendence.findMany({ 
+      where: {
+        AND:[{
+          user_Id: id,
+          NOT:{
+            check_out_time:0,
+          }
+        }]
+      }
+     });
   }
 
   findAll() {

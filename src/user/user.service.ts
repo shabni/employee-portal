@@ -38,4 +38,14 @@ export class UserService {
   remove(id: number) {
     return `This action removes a #${id} user`;
   }
+
+  async updateUser(id: string, logInUserDto: any) {
+
+    const resp = await this.prisma.user.update({
+
+      where:{user_id : id},
+      data:{...logInUserDto}})
+
+    return resp
+  }
 }

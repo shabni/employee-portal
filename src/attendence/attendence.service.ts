@@ -27,8 +27,12 @@ export class AttendenceService {
     return this.update(id['attendence_id'], {check_out_time :createCheckoutDto['check_out_time']})
   }
 
+  getUserAttendence(id: string) {
+    return this.prisma.attendence.findMany({ where: { user_Id: id } });
+  }
+
   findAll() {
-    return  this.prisma.attendence.findMany();;
+    return  this.prisma.attendence.findMany();
   }
 
   findOne(id: number) {

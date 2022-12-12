@@ -16,7 +16,7 @@ model Roles {
   title       String   @unique
   createdAt   BigInt
   updatedAt   BigInt
-  user        User?
+  user        User[]
   is_deleted  Boolean  @default(false)   
   
 }
@@ -37,7 +37,7 @@ model User {
   is_LoggedIn   Boolean     @default(false)
   is_CheckedIn  Boolean     @default(false)
   role          Roles?      @relation(fields: [role_id], references: [role_id])
-  role_id       String?     @unique
+  role_id       String?    
   emailOffice   String?
   address       String?
   phone         Int?

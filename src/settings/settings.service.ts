@@ -22,8 +22,11 @@ export class SettingsService {
     }});
   }
 
-  findAll() {
-    return `This action returns all settings`;
+  findAllRoles() {
+    return this.prisma.roles.findMany({select:{
+      role_id:true,
+      title: true
+    }});
   }
 
   findOne(id: number) {

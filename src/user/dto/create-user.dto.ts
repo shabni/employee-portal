@@ -32,9 +32,6 @@ export class CreateUserDto {
   @ApiProperty({ required: false })
   emailOffice: string;
 
-  @ApiProperty({ required: false })
-  emailpersonal: string;
-
   @ApiProperty()
-  role_Id: string;
+  role_id: string;
 }

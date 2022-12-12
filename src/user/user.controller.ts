@@ -4,12 +4,12 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiTags } from '@nestjs/swagger';
 
-@Controller('user')
+@Controller('api/user')
 @ApiTags('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @Post()
+  @Post('/createEmployee')
   create(@Body() createUserDto: CreateUserDto) {
     return this.userService.create(createUserDto);
   }

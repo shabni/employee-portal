@@ -36,9 +36,11 @@ model User {
   boss3         String?
   is_LoggedIn   Boolean     @default(false)
   is_CheckedIn  Boolean     @default(false)
-  role          Roles?      @relation(fields: [role_Id], references: [role_id])
-  role_Id       String?     @unique
+  role          Roles?      @relation(fields: [role_id], references: [role_id])
+  role_id       String?     @unique
   emailOffice   String?
+  address       String?
+  phone         Int?
   date_updated  BigInt
   date_added    BigInt
   is_deleted    Boolean     @default(false)

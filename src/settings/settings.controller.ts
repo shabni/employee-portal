@@ -15,10 +15,10 @@ export class SettingsController {
     return this.settingsService.createRole(createRoleDto);
   }
 
-  // @Get()
-  // findAll() {
-  //   return this.settingsService.findAll();
-  // }
+  @Get('/getRoles')
+  findAllRoles() {
+    return this.settingsService.findAllRoles();
+  }
 
   // @Get(':id')
   // findOne(@Param('id') id: string) {

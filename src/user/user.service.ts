@@ -25,10 +25,13 @@ export class UserService {
       lName: true,
       fatherName: true,
       joining_date: true,
+      userName: true,
+      password: true,
       nic: true,
       emailOffice: true,
       address: true,
       phone: true,
+      role_id: true
     }});
   }
 

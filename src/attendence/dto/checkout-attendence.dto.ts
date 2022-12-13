@@ -7,6 +7,9 @@ export class createCheckoutDto {
     @ApiProperty({ required: false })
     user_Id: string;
 
+    @ApiProperty({ required: false })
+    userName: string;
+
     @ApiProperty()
     check_out_time: bigint;
   

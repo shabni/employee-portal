@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { throwError } from 'rxjs';
+import { datesForCreate, MakeTimedIDUnique } from 'src/common/helper';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { LogInDto, logInUserDto, logOutUserDto } from './dto/create-auth.dto';
+import { LogInDto, logInUserDto, logOutUserDto, createSessionDto } from './dto/create-auth.dto';
 
 @Injectable()
 export class AuthService {
@@ -23,22 +24,41 @@ export class AuthService {
         user['check_in_time'] = x['check_in_time']
       }
 
-      if (user.is_LoggedIn)
-      {
-        return user
-      }
+      // if (user.is_LoggedIn)
+      // {
+      //   return user
+      // }
 
-      else if (user.userName === LogInDto.userName && user.password === LogInDto.password){
+      if (user.userName === LogInDto.userName && user.password === LogInDto.password){
 
         this.updateUser(user.user_id,{is_LoggedIn:true})
         user.is_LoggedIn=true
-        return user
+        let session = await this.getUserSession(user.userName)
+
+        if (session){
+          session['sessionExist'] = true
+          return session
+        }
+        else {
+          user['sessionExist'] = false
+          return user}
       }
       else throwError
   }
 
   async LogOut(logOutUserDto: logOutUserDto) {
       this.updateUser(logOutUserDto.user_id,{is_LoggedIn:false})
+
+      this.removeSession(logOutUserDto.userName)
+  }
+  
+  async removeSession(userName: string) {
+    const dleted = await  this.prisma.session.deleteMany({
+      where:{
+        userName : userName
+      }
+    })
+    return dleted
   }
 
 
@@ -62,4 +82,48 @@ export class AuthService {
     });
     return attendence[attendence.length-1]
   }
+
+  async getUserSession(userName) {
+
+    const session = await this.prisma.session.findFirst({
+      where: {
+          userName:userName, 
+        },
+      });
+
+      return session
+  }
+
+  async getSession(){
+     let data = await this.prisma.session.findMany({
+      orderBy:[{
+        date_updated: 'desc'
+      }],
+      take: 1
+     });
+
+     if (data){
+      return data[0]
+     }
+     else return {}
+  }
+
+  createSession(createSessionDto :createSessionDto) {
+    return this.prisma.session.create({data:{
+      session_id: MakeTimedIDUnique(),
+      ...createSessionDto,
+      ...datesForCreate()
+    }});
+  }
+
+  async updateSession(userName: string, updateSessionDto: any) {
+
+    const resp = await this.prisma.session.update({
+
+      where:{userName : userName},
+      data:{...updateSessionDto}})
+
+    return resp
+  }
+
 }

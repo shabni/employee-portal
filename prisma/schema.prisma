@@ -60,3 +60,26 @@ model Attendence {
   is_deleted          Boolean  @default(false)
     
 }
+
+model Session {
+  session_id        String    @id
+  user_id           String     
+  fName             String?
+  lName             String?
+  userName          String     @unique
+  password          String 
+  fatherName        String?
+  joining_date      BigInt?
+  is_LoggedIn       Boolean?     @default(false)
+  is_CheckedIn      Boolean?     @default(false)
+  role_id           String?    
+  emailOffice       String?
+  address           String?
+  phone             Int?
+  date_updated      BigInt?
+  date_added        BigInt?
+  is_deleted        Boolean?     @default(false)
+  attendence_date   BigInt?
+  check_in_time     BigInt?
+  check_out_time    BigInt?
+}

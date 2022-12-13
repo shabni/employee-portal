@@ -12,5 +12,8 @@ export class CreateAttendenceDto {
   
     @ApiProperty({ required: false })
     user_Id: string;
+
+    @ApiProperty({ required: false })
+    userName: string;
   
 }

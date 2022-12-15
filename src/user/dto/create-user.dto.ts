@@ -1,6 +1,9 @@
 import { ApiProperty } from "@nestjs/swagger";
+import { IsNotNull } from "@nestjsi/class-validator";
+import { IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class CreateUserDto {
+
   @ApiProperty()
   fName: string;
 
@@ -16,10 +19,16 @@ export class CreateUserDto {
   @ApiProperty({ required: true })
   password: string;
 
+  @IsNumber()
+  @ApiProperty({ required: true })
+  phone: number;
+
   @ApiProperty({ required: false })
   boss1: string;
+
   @ApiProperty({ required: false })
   boss2: string;
+  
   @ApiProperty({ required: false })
   boss3: string;
 

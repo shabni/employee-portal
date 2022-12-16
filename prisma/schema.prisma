@@ -10,76 +10,84 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
 model Roles {
-  role_id     String   @id
-  title       String   @unique
-  createdAt   BigInt
-  updatedAt   BigInt
-  user        User[]
-  is_deleted  Boolean  @default(false)   
-  
+  role_id    String  @id
+  title      String  @unique
+  createdAt  BigInt
+  updatedAt  BigInt
+  user       User[]
+  is_deleted Boolean @default(false)
 }
 
-
 model User {
-  user_id       String     @id
-  fName         String
-  lName         String?
-  userName      String     @unique
-  password      String 
-  fatherName    String?
-  joining_date  BigInt
-  nic           String
-  boss1         String?
-  boss2         String?
-  boss3         String?
-  is_LoggedIn   Boolean     @default(false)
-  is_CheckedIn  Boolean     @default(false)
-  role          Roles?      @relation(fields: [role_id], references: [role_id])
-  role_id       String?    
-  emailOffice   String?
-  address       String?
-  phone         Int?
-  date_updated  BigInt
-  date_added    BigInt
-  is_deleted    Boolean     @default(false)
+  user_id      String  @id
+  fName        String
+  lName        String?
+  userName     String  @unique
+  password     String
+  fatherName   String?
+  joining_date BigInt
+  nic          String
+  boss1        String?
+  boss2        String?
+  boss3        String?
+  is_LoggedIn  Boolean @default(false)
+  is_CheckedIn Boolean @default(false)
+  role         Roles?  @relation(fields: [role_id], references: [role_id])
+  role_id      String?
+  emailOffice  String?
+  address      String?
+  phone        Int?
+  date_updated BigInt
+  date_added   BigInt
+  is_deleted   Boolean @default(false)
 
-  attendence    Attendence[]
+  attendence Attendence[]
+  Reports    Reports[]
 }
 
 model Attendence {
-  attendence_id       String  @id
-  attendence_date     BigInt
-  check_in_time       BigInt
-  check_out_time      BigInt
-  user                User      @relation(fields: [user_Id], references: [user_id])
-  user_Id             String   
-  date_updated        BigInt
-  date_added          BigInt
-  is_deleted          Boolean  @default(false)
-    
+  attendence_id   String  @id
+  attendence_date BigInt
+  check_in_time   BigInt
+  check_out_time  BigInt
+  user            User    @relation(fields: [user_Id], references: [user_id])
+  user_Id         String
+  date_updated    BigInt
+  date_added      BigInt
+  is_deleted      Boolean @default(false)
 }
 
 model Session {
-  session_id        String    @id
-  user_id           String     
-  fName             String?
-  lName             String?
-  userName          String     @unique
-  password          String 
-  fatherName        String?
-  joining_date      BigInt?
-  is_LoggedIn       Boolean?     @default(false)
-  is_CheckedIn      Boolean?     @default(false)
-  role_id           String?    
-  emailOffice       String?
-  address           String?
-  phone             Int?
-  date_updated      BigInt?
-  date_added        BigInt?
-  is_deleted        Boolean?     @default(false)
-  attendence_date   BigInt?
-  check_in_time     BigInt?
-  check_out_time    BigInt?
+  session_id      String   @id
+  user_id         String
+  fName           String?
+  lName           String?
+  userName        String   @unique
+  password        String
+  fatherName      String?
+  joining_date    BigInt?
+  is_LoggedIn     Boolean? @default(false)
+  is_CheckedIn    Boolean? @default(false)
+  role_id         String?
+  emailOffice     String?
+  address         String?
+  phone           Int?
+  date_updated    BigInt?
+  date_added      BigInt?
+  is_deleted      Boolean? @default(false)
+  attendence_date BigInt?
+  check_in_time   BigInt?
+  check_out_time  BigInt?
+}
+
+model Reports {
+  report_id    String  @id
+  report_date  BigInt
+  description  String  @db.VarChar(500)
+  user         User    @relation(fields: [user_id], references: [user_id])
+  user_id      String
+  date_updated BigInt
+  date_added   BigInt
+  is_deleted   Boolean @default(false)
 }

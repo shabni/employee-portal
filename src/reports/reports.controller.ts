@@ -24,10 +24,10 @@ export class ReportsController {
   //   return this.reportsService.findOne(+id);
   // }
 
-  // @Patch(':id')
-  // update(@Param('id') id: string, @Body() updateReportDto: UpdateReportDto) {
-  //   return this.reportsService.update(+id, updateReportDto);
-  // }
+  @Patch(':updateReport/:id')
+  updateReport(@Param('id') id: string, @Body() updateReportDto: UpdateReportDto) {
+    return this.reportsService.updateReport(id, updateReportDto);
+  }
 
   // @Delete(':id')
   // remove(@Param('id') id: string) {

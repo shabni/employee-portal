@@ -19,6 +19,12 @@ export class ReportsService {
 
   getUserReport(id: string) {
     return this.prisma.reports.findMany({
+      select: {
+        description:true,
+        user_id:true,
+        report_date:true,
+        report_id:true,
+      },
       orderBy:[{
         date_updated: 'desc'
       }],
@@ -37,9 +43,14 @@ export class ReportsService {
   //   return `This action returns a #${id} report`;
   // }
 
-  // update(id: number, updateReportDto: UpdateReportDto) {
-  //   return `This action updates a #${id} report`;
-  // }
+  async updateReport(id: string, updateReportDto: UpdateReportDto) {
+    const resp = await this.prisma.reports.update({
+
+      where:{report_id : id},
+      data:{...updateReportDto}})
+
+    return resp
+  }
 
   // remove(id: number) {
   //   return `This action removes a #${id} report`;

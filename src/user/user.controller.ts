@@ -19,6 +19,11 @@ export class UserController {
     return this.userService.findAll();
   }
 
+  @Get('/getTeamLeads')
+  getTeamLeads() {
+    return this.userService.getTeamLeads();
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.userService.findOne(id);

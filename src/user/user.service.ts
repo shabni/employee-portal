@@ -31,7 +31,8 @@ export class UserService {
       emailOffice: true,
       address: true,
       phone: true,
-      role_id: true
+      role_id: true,
+      team_lead_id: true
     }});
   }
 
@@ -58,6 +59,24 @@ export class UserService {
 
       where:{user_id : id},
       data:{...logInUserDto}})
+
+    return resp
+  }
+
+  async getTeamLeads(){
+    const resp = await this.prisma.user.findMany({
+      select:{
+        user_id:true,
+        fName: true,
+      },
+      where:{OR:[{
+        role_id:'GGDWB5XDEW'
+      },
+      {
+        role_id:'GGAFZR64VK'
+      },
+    ]},
+    })
 
     return resp
   }

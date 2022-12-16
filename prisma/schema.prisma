@@ -28,9 +28,6 @@ model User {
   fatherName   String?
   joining_date BigInt
   nic          String
-  boss1        String?
-  boss2        String?
-  boss3        String?
   is_LoggedIn  Boolean @default(false)
   is_CheckedIn Boolean @default(false)
   role         Roles?  @relation(fields: [role_id], references: [role_id])
@@ -44,6 +41,10 @@ model User {
 
   attendence Attendence[]
   Reports    Reports[]
+
+  team_lead_id String?
+  successor    User?   @relation("TeamLead", fields: [team_lead_id], references: [user_id])
+  predecessor  User[]  @relation("TeamLead")
 }
 
 model Attendence {

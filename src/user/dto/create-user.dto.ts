@@ -24,15 +24,6 @@ export class CreateUserDto {
   phone: number;
 
   @ApiProperty({ required: false })
-  boss1: string;
-
-  @ApiProperty({ required: false })
-  boss2: string;
-  
-  @ApiProperty({ required: false })
-  boss3: string;
-
-  @ApiProperty({ required: false })
   joining_date: bigint;
 
   @ApiProperty()
@@ -43,4 +34,7 @@ export class CreateUserDto {
 
   @ApiProperty()
   role_id: string;
+
+  @ApiProperty()
+  team_lead_id: string;
 }

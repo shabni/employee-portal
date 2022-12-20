@@ -712,7 +712,7 @@
   "resolved" "https://registry.npmjs.org/@nestjs/mapped-types/-/mapped-types-1.2.0.tgz"
   "version" "1.2.0"
 
-"@nestjs/platform-express@^9.0.0":
+"@nestjs/platform-express@^9.0.0", "@nestjs/platform-express@^9.2.1":
   "integrity" "sha512-7PecaXt8lrdS1p6Vb1X/am3GGv+EO1VahyDzaEGOK6C0zwhc0VPfLtwihkjjfhS6BjpRIXXgviwEjONUvxVZnA=="
   "resolved" "https://registry.npmjs.org/@nestjs/platform-express/-/platform-express-9.2.1.tgz"
   "version" "9.2.1"
@@ -988,10 +988,10 @@
   "resolved" "https://registry.npmjs.org/@types/mime/-/mime-3.0.1.tgz"
   "version" "3.0.1"
 
-"@types/node@*", "@types/node@^16.0.0":
-  "integrity" "sha512-9qGjJ5GyShZjUfx2ArBIGM+xExdfLvvaCyQR0t6yRXKPcWCVYF/WemtX/uIU3r7FYECXRXkIiw2Vnhn6y8d+pw=="
-  "resolved" "https://registry.npmjs.org/@types/node/-/node-16.18.4.tgz"
-  "version" "16.18.4"
+"@types/node@*", "@types/node@^16.18.10":
+  "integrity" "sha512-XU1+v7h81p7145ddPfjv7jtWvkSilpcnON3mQ+bDi9Yuf7OI56efOglXRyXWgQ57xH3fEQgh7WOJMncRHVew5w=="
+  "resolved" "https://registry.npmjs.org/@types/node/-/node-16.18.10.tgz"
+  "version" "16.18.10"
 
 "@types/parse-json@^4.0.0":
   "integrity" "sha512-//oorEZjL6sbPcKUaCdIGlIUeH26mgzimjBB77G6XRgnDl/L5wOnpyBGRe/Mmf5CVW3PwEBE1NjiMZ/ssFh4wA=="
@@ -4607,7 +4607,7 @@
   "resolved" "https://registry.npmjs.org/utils-merge/-/utils-merge-1.0.1.tgz"
   "version" "1.0.1"
 
-"uuid@9.0.0":
+"uuid@^9.0.0", "uuid@9.0.0":
   "integrity" "sha512-MXcSTerfPa4uqyzStbRoTgt5XIe3x5+42+q1sDuy3R5MDk66URdLMOZe5aPX/SQd+kuYAh0FdP/pO28IkQyTeg=="
   "resolved" "https://registry.npmjs.org/uuid/-/uuid-9.0.0.tgz"
   "version" "9.0.0"

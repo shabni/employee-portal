@@ -32,7 +32,8 @@ export class UserService {
       address: true,
       phone: true,
       role_id: true,
-      team_lead_id: true
+      team_lead_id: true,
+      profile_image:true,
     }});
   }
 

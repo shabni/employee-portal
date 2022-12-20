@@ -35,6 +35,8 @@ model User {
   emailOffice  String?
   address      String?
   phone        Int?
+  profile_image      String?
+  designation String?
   date_updated BigInt
   date_added   BigInt
   is_deleted   Boolean @default(false)

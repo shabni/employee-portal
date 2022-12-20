@@ -35,6 +35,12 @@ export class CreateUserDto {
   @ApiProperty()
   role_id: string;
 
+  @ApiProperty({ required: false })
+  profile_image?: string;
+
+  @ApiProperty({ required: false })
+  designationid?: string;
+
   @ApiProperty()
   team_lead_id: string;
 }

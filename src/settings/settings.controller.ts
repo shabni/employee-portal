@@ -20,6 +20,11 @@ export class SettingsController {
     return this.settingsService.createRole(createRoleDto);
   }
 
+  @Get('/getScales')
+  getScales() {
+    return {scales:['1','2','3','4','5']};
+  }
+
   @Get('/getRoles')
   findAllRoles() {
     return this.settingsService.findAllRoles();
@@ -48,4 +53,8 @@ export class SettingsController {
     return res.sendFile(join(process.cwd(), 'uploads/'+imgUrl))
   }
 
+  @Get('getRole/:id')
+  findOne(@Param('id') id: string){
+    return this.settingsService.findOne(id);
+  }
 }

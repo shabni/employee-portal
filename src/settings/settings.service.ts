@@ -25,12 +25,17 @@ export class SettingsService {
   findAllRoles() {
     return this.prisma.roles.findMany({select:{
       role_id:true,
-      title: true
+      title: true,
+      scale:true,
     }});
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} setting`;
+  findOne(id: string) {
+    return this.prisma.roles.findFirst({
+      where:{
+        role_id:id
+      }
+    });
   }
 
   update(id: number, updateSettingDto: UpdateSettingDto) {

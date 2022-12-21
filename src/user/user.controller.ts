@@ -19,9 +19,9 @@ export class UserController {
     return this.userService.findAll();
   }
 
-  @Get('/getTeamLeads')
-  getTeamLeads() {
-    return this.userService.getTeamLeads();
+  @Get('/getTeamLeads/:roleId')
+  getTeamLeads(@Param('roleId') roleId: string) {
+    return this.userService.getTeamLeads(roleId);
   }
 
   @Get(':id')

@@ -3,7 +3,10 @@ import { ApiProperty } from "@nestjs/swagger";
 export class CreateSettingDto {}
 
 export class CreateRoleDto{
-    @ApiProperty()
+    @ApiProperty({required:true})
     title: string;
+
+    @ApiProperty({required:true})
+    scale: number;
 
 }

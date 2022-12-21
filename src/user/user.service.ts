@@ -64,19 +64,39 @@ export class UserService {
     return resp
   }
 
-  async getTeamLeads(){
+  findRole(id: string) {
+    return this.prisma.roles.findFirst({
+      select:{scale: true},
+      where:{
+        role_id:id
+      }
+    });
+  }
+
+
+  findGreaterRoles(scale: number){
+    return this.prisma.roles.findMany({
+      select:{
+        role_id:true
+      },
+      where:{
+          scale:{
+            gt:scale
+          }
+      }
+    });
+
+  }
+
+  async getTeamLeads(roleId: string){
+    let scale = await this.findRole(roleId)
+    let roles = await this.findGreaterRoles(scale.scale)
     const resp = await this.prisma.user.findMany({
       select:{
         user_id:true,
         fName: true,
       },
-      where:{OR:[{
-        role_id:'GGDWB5XDEW'
-      },
-      {
-        role_id:'GGAFZR64VK'
-      },
-    ]},
+      where:{OR:roles},
     })
 
     return resp

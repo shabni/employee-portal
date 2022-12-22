@@ -94,18 +94,63 @@ export class AuthService {
       return session
   }
 
+  findRole(id: string) {
+    return this.prisma.roles.findFirst({
+      select:{permissions: true},
+      where:{
+        role_id:id
+      }
+    });
+  }
+
+  makePermissions(permissions:string){
+
+    let permissionsList: string[] = permissions.split(',')
+    let permissinData = {}
+    permissionsList.forEach(element=>{
+      permissinData[element]=true })
+
+    return permissinData
+  }
+
   async getSession(){
-     let data = await this.prisma.session.findMany({
+     let profile = await this.prisma.session.findMany({
+      select:{
+        user_id:true,
+        fName:true,
+        lName:true,
+        userName:true,
+        fatherName:true,
+        joining_date:true,
+        is_LoggedIn:true,
+        role_id:true,
+        phone:true,
+        emailOffice:true,
+        address:true,
+        attendence_date:true,
+        check_in_time:true,
+        check_out_time:true,
+        profile_image:true,
+        designation:true,
+      },
+        
       orderBy:[{
         date_updated: 'desc'
       }],
       take: 1
      });
 
-     if (data){
-      return data[0]
+     let data = {}
+
+     if (profile.length>0){
+
+      data['profile'] = profile[0]
+      let permissions = await this.findRole(data['profile']['role_id'])
+      if (permissions['permissions']) data['permissions'] = this.makePermissions(permissions['permissions'])
+    
      }
-     else return {}
+  
+     return data;
   }
 
   createSession(createSessionDto :createSessionDto) {

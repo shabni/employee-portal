@@ -84,6 +84,8 @@ model Session {
   attendence_date BigInt?
   check_in_time   BigInt?
   check_out_time  BigInt?
+  profile_image      String?
+  designation String?
 }
 
 model Reports {

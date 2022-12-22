@@ -34,6 +34,7 @@ export class UserService {
       role_id: true,
       team_lead_id: true,
       profile_image:true,
+      designation:true,
     }});
   }
 

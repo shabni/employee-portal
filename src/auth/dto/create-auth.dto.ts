@@ -78,4 +78,11 @@ export class createSessionDto {
 
     @ApiProperty() 
     check_out_time?:   bigint
+
+    @ApiProperty() 
+    profile_image?:      string
+
+    @ApiProperty() 
+    designation?:      string
+
 }

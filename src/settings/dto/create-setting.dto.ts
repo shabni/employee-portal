@@ -9,4 +9,7 @@ export class CreateRoleDto{
     @ApiProperty({required:true})
     scale: number;
 
+    @ApiProperty({})
+    permissions: number;
+
 }

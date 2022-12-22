@@ -14,6 +14,7 @@ model Roles {
   role_id    String  @id
   title      String  @unique
   scale      Int
+  permissions  String?  @db.VarChar(500)
   createdAt  BigInt
   updatedAt  BigInt
   user       User[]

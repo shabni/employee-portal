@@ -10,6 +10,6 @@ export class CreateRoleDto{
     scale: number;
 
     @ApiProperty({})
-    permissions: number;
+    permissions: string;
 
 }

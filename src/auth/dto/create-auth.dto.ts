@@ -1,88 +1,86 @@
-import { ApiProperty } from "@nestjs/swagger";
+import { ApiProperty } from '@nestjs/swagger';
 
 export class LogInDto {
-    @ApiProperty()
-    userName: string
+  @ApiProperty()
+  userName: string;
 
-    @ApiProperty()
-    password: string
+  @ApiProperty()
+  password: string;
 }
 
 export class logInUserDto {
-    @ApiProperty()
-    is_LoggedIn: boolean
+  @ApiProperty()
+  is_LoggedIn: boolean;
 }
 
 export class logOutUserDto {
-    @ApiProperty()
-    user_id: string
+  @ApiProperty()
+  user_id: string;
 
-    @ApiProperty()
-    userName: string
+  @ApiProperty()
+  userName: string;
 }
 
 export class createSessionDto {
+  @ApiProperty()
+  user_id: string;
+  @ApiProperty()
+  fName?: string;
 
-    @ApiProperty()
-    user_id:        string   
-    @ApiProperty()  
-    fName?:        string
+  @ApiProperty()
+  lName?: string;
 
-    @ApiProperty() 
-    lName?:        string
+  @ApiProperty()
+  userName: string;
 
-    @ApiProperty() 
-    userName:        string
-    
-    @ApiProperty() 
-    password :        string
+  @ApiProperty()
+  password: string;
 
-    @ApiProperty() 
-    fatherName?:        string
+  @ApiProperty()
+  fatherName?: string;
 
-    @ApiProperty() 
-    joining_date?:      bigint
+  @ApiProperty()
+  joining_date?: bigint;
 
-    @ApiProperty() 
-    is_LoggedIn?:      boolean
-    
-    @ApiProperty() 
-    is_CheckedIn?:      boolean
-    
-    @ApiProperty() 
-    role_id?:      string
+  @ApiProperty()
+  is_LoggedIn?: boolean;
 
-    @ApiProperty() 
-    emailOffice?:      string
+  @ApiProperty()
+  is_CheckedIn?: boolean;
 
-    @ApiProperty() 
-    address?:      string
+  @ApiProperty()
+  role_id?: string;
 
-    @ApiProperty() 
-    phone?:            number
+  @ApiProperty()
+  emailOffice?: string;
 
-    @ApiProperty() 
-    date_updated?:   bigint
+  @ApiProperty()
+  address?: string;
 
-    @ApiProperty() 
-    date_added?:   bigint
+  @ApiProperty()
+  phone?: number;
 
-    @ApiProperty() 
-    is_deleted?:   boolean
+  @ApiProperty()
+  date_updated?: bigint;
 
-    @ApiProperty() 
-    attendence_date?:   bigint
+  @ApiProperty()
+  date_added?: bigint;
 
-    @ApiProperty() 
-    check_in_time?:   bigint
+  @ApiProperty()
+  is_deleted?: boolean;
 
-    @ApiProperty() 
-    check_out_time?:   bigint
+  @ApiProperty()
+  attendence_date?: bigint;
 
-    @ApiProperty() 
-    profile_image?:      string
+  @ApiProperty()
+  check_in_time?: bigint;
 
-    @ApiProperty() 
-    designation?:      string
+  @ApiProperty()
+  check_out_time?: bigint;
 
+  @ApiProperty()
+  profile_image?: string;
+
+  @ApiProperty()
+  designation?: string;
 }

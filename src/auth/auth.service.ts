@@ -152,14 +152,23 @@ export class AuthService {
     return data;
   }
 
-  createSession(createSessionDto: createSessionDto) {
-    return this.prisma.session.create({
+  async createSession(createSessionDto: createSessionDto) {
+    let data = {};
+
+    let session = await this.prisma.session.create({
       data: {
         session_id: MakeTimedIDUnique(),
         ...createSessionDto,
         ...datesForCreate(),
       },
     });
+
+    data['profile'] = session;
+    let permissions = await this.findRole(data['profile']['role_id']);
+    if (permissions['permissions'])
+      data['permissions'] = this.makePermissions(permissions['permissions']);
+
+    return data;
   }
 
   async updateSession(userName: string, updateSessionDto: any) {

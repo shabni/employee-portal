@@ -11,37 +11,37 @@ datasource db {
 }
 
 model Roles {
-  role_id    String  @id
-  title      String  @unique
-  scale      Int
-  permissions  String?  @db.VarChar(500)
-  createdAt  BigInt
-  updatedAt  BigInt
-  user       User[]
-  is_deleted Boolean @default(false)
+  role_id     String  @id
+  title       String  @unique
+  scale       Int
+  permissions String? @db.VarChar(500)
+  createdAt   BigInt
+  updatedAt   BigInt
+  user        User[]
+  is_deleted  Boolean @default(false)
 }
 
 model User {
-  user_id      String  @id
-  fName        String
-  lName        String?
-  userName     String  @unique
-  password     String
-  fatherName   String?
-  joining_date BigInt
-  nic          String
-  is_LoggedIn  Boolean @default(false)
-  is_CheckedIn Boolean @default(false)
-  role         Roles?  @relation(fields: [role_id], references: [role_id])
-  role_id      String?
-  emailOffice  String?
-  address      String?
-  phone        Int?
-  profile_image      String?
-  designation String?
-  date_updated BigInt
-  date_added   BigInt
-  is_deleted   Boolean @default(false)
+  user_id       String  @id
+  fName         String
+  lName         String?
+  userName      String  @unique
+  password      String
+  fatherName    String?
+  joining_date  BigInt
+  nic           String
+  is_LoggedIn   Boolean @default(false)
+  is_CheckedIn  Boolean @default(false)
+  role          Roles?  @relation(fields: [role_id], references: [role_id])
+  role_id       String?
+  emailOffice   String?
+  address       String?
+  phone         Int?
+  profile_image String?
+  designation   String?
+  date_updated  BigInt
+  date_added    BigInt
+  is_deleted    Boolean @default(false)
 
   attendence Attendence[]
   Reports    Reports[]
@@ -84,8 +84,8 @@ model Session {
   attendence_date BigInt?
   check_in_time   BigInt?
   check_out_time  BigInt?
-  profile_image      String?
-  designation String?
+  profile_image   String?
+  designation     String?
 }
 
 model Reports {

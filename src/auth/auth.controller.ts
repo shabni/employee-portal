@@ -1,7 +1,20 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
-import { LogInDto, logInUserDto, logOutUserDto, createSessionDto } from './dto/create-auth.dto';
+import {
+  LogInDto,
+  logInUserDto,
+  logOutUserDto,
+  createSessionDto,
+} from './dto/create-auth.dto';
 import { UpdateAuthDto } from './dto/update-auth.dto';
 
 @Controller('api/auth')
@@ -28,5 +41,4 @@ export class AuthController {
   getSession() {
     return this.authService.getSession();
   }
-
 }

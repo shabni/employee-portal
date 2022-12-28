@@ -6,44 +6,48 @@ import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
 export class UserService {
-
   constructor(private prisma: PrismaService) {}
-  
+
   create(createUserDto: CreateUserDto) {
-    return this.prisma.user.create({data:{
-      user_id: MakeTimedIDUnique(),
-      ...createUserDto,
-      ...datesForCreate()
-    }});
+    console.log(createUserDto, '-------------');
+    return this.prisma.users.create({
+      data: {
+        userId: MakeTimedIDUnique(),
+        ...createUserDto,
+        ...datesForCreate(),
+      },
+    });
   }
 
   findAll() {
     // return `This action returns all user`;
-    return this.prisma.user.findMany({select:{
-      user_id:true,
-      fName: true,
-      lName: true,
-      fatherName: true,
-      joining_date: true,
-      userName: true,
-      password: true,
-      nic: true,
-      emailOffice: true,
-      address: true,
-      phone: true,
-      role_id: true,
-      team_lead_id: true,
-      profile_image:true,
-      designation:true,
-    }});
+    return this.prisma.users.findMany({
+      select: {
+        userId: true,
+        fName: true,
+        lName: true,
+        fatherName: true,
+        joiningDate: true,
+        userName: true,
+        password: true,
+        nic: true,
+        emailOffice: true,
+        address: true,
+        phone: true,
+        roleId: true,
+        teamLeadId: true,
+        profileImage: true,
+        designation: true,
+      },
+    });
   }
 
   findOne(id: string) {
-    return this.prisma.user.findFirstOrThrow({
-      select:{
-        fName:true
+    return this.prisma.users.findFirstOrThrow({
+      select: {
+        fName: true,
       },
-      where: { user_id: id},
+      where: { userId: id },
     });
   }
 
@@ -56,50 +60,47 @@ export class UserService {
   }
 
   async updateUser(id: string, logInUserDto: any) {
+    const resp = await this.prisma.users.update({
+      where: { userId: id },
+      data: { ...logInUserDto },
+    });
 
-    const resp = await this.prisma.user.update({
-
-      where:{user_id : id},
-      data:{...logInUserDto}})
-
-    return resp
+    return resp;
   }
 
   findRole(id: string) {
     return this.prisma.roles.findFirst({
-      select:{scale: true},
-      where:{
-        role_id:id
-      }
-    });
-  }
-
-
-  findGreaterRoles(scale: number){
-    return this.prisma.roles.findMany({
-      select:{
-        role_id:true
+      select: { scale: true },
+      where: {
+        roleId: id,
       },
-      where:{
-          scale:{
-            gt:scale
-          }
-      }
     });
-
   }
 
-  async getTeamLeads(roleId: string){
-    let scale = await this.findRole(roleId)
-    let roles = await this.findGreaterRoles(scale.scale)
-    const resp = await this.prisma.user.findMany({
-      select:{
-        user_id:true,
+  findGreaterRoles(scale: number) {
+    return this.prisma.roles.findMany({
+      select: {
+        roleId: true,
+      },
+      where: {
+        scale: {
+          gt: scale,
+        },
+      },
+    });
+  }
+
+  async getTeamLeads(roleId: string) {
+    let scale = await this.findRole(roleId);
+    let roles = await this.findGreaterRoles(scale.scale);
+    const resp = await this.prisma.users.findMany({
+      select: {
+        userId: true,
         fName: true,
       },
-      where:{OR:roles},
-    })
+      where: { OR: roles },
+    });
 
-    return resp
+    return resp;
   }
 }

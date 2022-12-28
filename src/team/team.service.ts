@@ -9,26 +9,26 @@ export class TeamService {
   constructor(private prisma: PrismaService) {}
 
   getTeamMembers(id: string) {
-    return this.prisma.user.findMany({
+    return this.prisma.users.findMany({
       select: {
-        user_id: true,
+        userId: true,
         fName: true,
         lName: true,
         fatherName: true,
-        joining_date: true,
+        joiningDate: true,
         userName: true,
         password: true,
         nic: true,
         emailOffice: true,
         address: true,
         phone: true,
-        role_id: true,
-        team_lead_id: true,
-        profile_image: true,
+        roleId: true,
+        teamLeadId: true,
+        profileImage: true,
         designation: true,
       },
       where: {
-        team_lead_id: id,
+        teamLeadId: id,
       },
     });
   }
@@ -37,21 +37,21 @@ export class TeamService {
     let attendenceObject = {};
 
     attendence.forEach((element) => {
-      attendenceObject[element.user_Id] = element;
+      attendenceObject[element.userId] = element;
     });
 
     allUsers.forEach((element) => {
-      if (attendenceObject.hasOwnProperty(element.user_id)) {
-        element['attendence_date'] =
-          attendenceObject[element.user_id]['attendence_date'];
-        element['check_in_time'] =
-          attendenceObject[element.user_id]['check_in_time'];
-        element['check_out_time'] =
-          attendenceObject[element.user_id]['check_out_time'];
+      if (attendenceObject.hasOwnProperty(element.userId)) {
+        element['attendenceDate'] =
+          attendenceObject[element.userId]['attendenceDate'];
+        element['checkInTime'] =
+          attendenceObject[element.userId]['checkInTime'];
+        element['checkOutTime'] =
+          attendenceObject[element.userId]['checkOutTime'];
       } else {
-        element['attendence_date'] = null;
-        element['check_in_time'] = null;
-        element['check_out_time'] = null;
+        element['attendenceDate'] = null;
+        element['checkInTime'] = null;
+        element['checkOutTime'] = null;
       }
     });
 
@@ -72,26 +72,26 @@ export class TeamService {
     let userIdList: any[] = [];
     let whereCondition: any[] = [];
 
-    userIdList = await this.prisma.user.findMany({
-      select: { user_id: true, fName: true, lName: true },
+    userIdList = await this.prisma.users.findMany({
+      select: { userId: true, fName: true, lName: true },
       where: {
-        team_lead_id: userId,
+        teamLeadId: userId,
       },
     });
 
     userIdList.forEach((element) => {
-      element.user_Id = element.user_id;
+      element.userId = element.userId;
 
       whereCondition.push({
         AND: [
-          { user_Id: element.user_id },
+          { userId: element.userId },
           {
-            attendence_date: {
+            attendenceDate: {
               gt: start,
             },
           },
           {
-            attendence_date: {
+            attendenceDate: {
               lt: end,
             },
           },
@@ -114,15 +114,15 @@ export class TeamService {
     let reportsObject = {};
 
     reports.forEach((element) => {
-      reportsObject[element.user_id] = element;
+      reportsObject[element.userId] = element;
     });
 
     allUsers.forEach((element) => {
-      if (reportsObject.hasOwnProperty(element.user_id)) {
-        element['report_date'] = reportsObject[element.user_id]['report_date'];
-        element['description'] = reportsObject[element.user_id]['description'];
+      if (reportsObject.hasOwnProperty(element.userId)) {
+        element['reportDate'] = reportsObject[element.userId]['reportDate'];
+        element['description'] = reportsObject[element.userId]['description'];
       } else {
-        element['report_date'] = null;
+        element['reportDate'] = null;
         element['description'] = null;
       }
     });
@@ -136,24 +136,24 @@ export class TeamService {
     let userIdList: any[] = [];
     let whereCondition: any[] = [];
 
-    userIdList = await this.prisma.user.findMany({
-      select: { user_id: true, fName: true, lName: true },
+    userIdList = await this.prisma.users.findMany({
+      select: { userId: true, fName: true, lName: true },
       where: {
-        team_lead_id: userId,
+        teamLeadId: userId,
       },
     });
 
     userIdList.forEach((element) => {
       whereCondition.push({
         AND: [
-          { user_id: element.user_id },
+          { userId: element.userId },
           {
-            report_date: {
+            reportDate: {
               gt: start - 1,
             },
           },
           {
-            report_date: {
+            reportDate: {
               lt: end,
             },
           },

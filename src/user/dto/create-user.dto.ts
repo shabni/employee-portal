@@ -1,9 +1,8 @@
-import { ApiProperty } from "@nestjs/swagger";
-import { IsNotNull } from "@nestjsi/class-validator";
+import { ApiProperty } from '@nestjs/swagger';
+import { IsNotNull } from '@nestjsi/class-validator';
 import { IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class CreateUserDto {
-
   @ApiProperty()
   fName: string;
 
@@ -24,7 +23,7 @@ export class CreateUserDto {
   phone: number;
 
   @ApiProperty({ required: false })
-  joining_date: bigint;
+  joiningDate: bigint;
 
   @ApiProperty()
   nic: string;
@@ -33,14 +32,14 @@ export class CreateUserDto {
   emailOffice: string;
 
   @ApiProperty()
-  role_id: string;
+  roleId: string;
 
   @ApiProperty({ required: false })
-  profile_image?: string;
+  profileImage?: string;
 
   @ApiProperty({ required: false })
-  designationid?: string;
+  designation?: string;
 
   @ApiProperty()
-  team_lead_id: string;
+  teamLeadId?: string;
 }

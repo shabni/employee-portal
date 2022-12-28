@@ -6,33 +6,36 @@ import { UpdateReportDto } from './dto/update-report.dto';
 
 @Injectable()
 export class ReportsService {
-
   constructor(private prisma: PrismaService) {}
 
   createUserReport(createReportDto: CreateReportDto) {
-     return this.prisma.reports.create({data:{
-      report_id: MakeTimedIDUnique(),
-      ...createReportDto,
-      ...datesForCreate()
-    }});
+    return this.prisma.reports.create({
+      data: {
+        reportId: MakeTimedIDUnique(),
+        ...createReportDto,
+        ...datesForCreate(),
+      },
+    });
   }
 
   getUserReport(id: string) {
     return this.prisma.reports.findMany({
       select: {
-        description:true,
-        user_id:true,
-        report_date:true,
-        report_id:true,
+        description: true,
+        userId: true,
+        reportDate: true,
+        reportId: true,
       },
-      orderBy:[{
-        date_updated: 'desc'
-      }],
+      orderBy: [
+        {
+          updatedAt: 'desc',
+        },
+      ],
       take: 10,
       where: {
-        user_id: id
-      }
-     });
+        userId: id,
+      },
+    });
   }
 
   // findAll() {
@@ -45,11 +48,11 @@ export class ReportsService {
 
   async updateReport(id: string, updateReportDto: UpdateReportDto) {
     const resp = await this.prisma.reports.update({
+      where: { reportId: id },
+      data: { ...updateReportDto },
+    });
 
-      where:{report_id : id},
-      data:{...updateReportDto}})
-
-    return resp
+    return resp;
   }
 
   // remove(id: number) {

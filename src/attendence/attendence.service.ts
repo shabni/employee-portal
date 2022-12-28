@@ -9,76 +9,100 @@ import { AuthService } from 'src/auth/auth.service';
 
 @Injectable()
 export class AttendenceService {
-
-  constructor(private prisma: PrismaService, private readonly userService: UserService, private authService:AuthService) {}
+  constructor(
+    private prisma: PrismaService,
+    private readonly userService: UserService,
+    private authService: AuthService,
+  ) {}
 
   async checkIn(createAttendenceDto: CreateAttendenceDto) {
+    this.userService.updateUser(createAttendenceDto.userId, {
+      isCheckedIn: true,
+    });
 
-    this.userService.updateUser(createAttendenceDto.user_Id,{is_CheckedIn:true})
-
-    let userName =  createAttendenceDto.userName;
+    let userName = createAttendenceDto.userName;
     delete createAttendenceDto.userName;
 
     let attendence = await this.createAttendence(createAttendenceDto);
 
-    let payload = {is_CheckedIn:true, check_in_time:attendence['check_in_time'], attendence_date:attendence['attendence_date']};
+    let payload = {
+      isCheckedIn: true,
+      checkInTime: attendence['checkInTime'],
+      attendenceDate: attendence['attendenceDate'],
+    };
 
-    this.authService.updateSession(userName,payload);
+    this.authService.updateSession(userName, payload);
 
-
-    return attendence
+    return attendence;
   }
 
-  async createAttendence(createAttendenceDto: CreateAttendenceDto){
+  async createAttendence(createAttendenceDto: CreateAttendenceDto) {
+    let attendence = await this.prisma.attendence.create({
+      data: {
+        attendenceId: MakeTimedIDUnique(),
+        ...createAttendenceDto,
+        ...datesForCreate(),
+      },
+    });
 
-    let attendence = await this.prisma.attendence.create({data:{
-      attendence_id: MakeTimedIDUnique(),
-      ...createAttendenceDto,
-      ...datesForCreate()
-    }});
-
-    return attendence
-
+    return attendence;
   }
 
-  async createOut(createCheckoutDto:createCheckoutDto){
-
-    let userName =  createCheckoutDto.userName;
+  async createOut(createCheckoutDto: createCheckoutDto) {
+    let userName = createCheckoutDto.userName;
     delete createCheckoutDto.userName;
 
-    let id = await  this.prisma.attendence.findFirst({
-      select: {attendence_id:true},
-      where: { AND:[ {user_Id:  createCheckoutDto.user_Id , attendence_date: createCheckoutDto.attendence_date}]} })
-      this.userService.updateUser(createCheckoutDto.user_Id,{is_CheckedIn:false})
+    let id = await this.prisma.attendence.findFirst({
+      select: { attendenceId: true },
+      where: {
+        AND: [
+          {
+            userId: createCheckoutDto.userId,
+            attendenceDate: createCheckoutDto.attendenceDate,
+          },
+        ],
+      },
+    });
+    this.userService.updateUser(createCheckoutDto.userId, {
+      isCheckedIn: false,
+    });
 
-      
+    let payload = {
+      isCheckedIn: false,
+      checkInTime: null,
+      attendenceDate: null,
+    };
 
-    let payload = {is_CheckedIn:false, check_in_time:null, attendence_date:null};
+    this.authService.updateSession(userName, payload);
 
-    this.authService.updateSession(userName,payload);
-      
-    return this.update(id['attendence_id'], {check_out_time :createCheckoutDto['check_out_time']})
+    return this.update(id['attendenceId'], {
+      checkOutTime: createCheckoutDto['checkOutTime'],
+    });
   }
 
   getUserAttendence(id: string) {
     return this.prisma.attendence.findMany({
-      orderBy:[{
-        date_updated: 'desc'
-      }],
+      orderBy: [
+        {
+          updatedAt: 'desc',
+        },
+      ],
       take: 7,
       where: {
-        AND:[{
-          user_Id: id,
-          NOT:{
-            check_out_time:0,
-          }
-        }]
-      }
-     });
+        AND: [
+          {
+            userId: id,
+            NOT: {
+              checkOutTime: null,
+            },
+          },
+        ],
+      },
+    });
   }
 
   findAll() {
-    return  this.prisma.attendence.findMany();
+    return this.prisma.attendence.findMany();
   }
 
   findOne(id: number) {
@@ -86,13 +110,12 @@ export class AttendenceService {
   }
 
   async update(id: string, updateAttendenceDto: UpdateAttendenceDto) {
-
     const resp = await this.prisma.attendence.update({
+      where: { attendenceId: id },
+      data: { ...updateAttendenceDto },
+    });
 
-      where:{attendence_id : id},
-      data:{...updateAttendenceDto}})
-
-    return resp
+    return resp;
   }
 
   remove(id: number) {

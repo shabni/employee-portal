@@ -1,19 +1,18 @@
-import { ApiProperty } from "@nestjs/swagger";
+import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateAttendenceDto {
-    @ApiProperty()
-    attendence_date: bigint;
+  @ApiProperty()
+  attendenceDate: bigint;
 
-    @ApiProperty()
-    check_in_time: bigint;
+  @ApiProperty()
+  checkInTime: bigint;
 
-    @ApiProperty()
-    check_out_time: bigint;
-  
-    @ApiProperty({ required: false })
-    user_Id: string;
+  @ApiProperty()
+  checkOutTime?: bigint;
 
-    @ApiProperty({ required: false })
-    userName: string;
-  
+  @ApiProperty({ required: false })
+  userId: string;
+
+  @ApiProperty({ required: false })
+  userName: string;
 }

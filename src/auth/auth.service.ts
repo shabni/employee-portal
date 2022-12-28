@@ -14,19 +14,19 @@ export class AuthService {
   constructor(private prisma: PrismaService) {}
 
   async LogIn(LogInDto: LogInDto) {
-    const user = await this.prisma.user.findFirst({
+    const user = await this.prisma.users.findFirst({
       where: {
         userName: LogInDto.userName,
       },
     });
 
-    if (user.is_CheckedIn) {
-      let x = await this.findUserAttendenceTime(user.user_id);
-      user['attendence_date'] = x['attendence_date'];
-      user['check_in_time'] = x['check_in_time'];
+    if (user.isCheckedIn) {
+      let x = await this.findUserAttendenceTime(user.userId);
+      user['attendenceDate'] = x['attendenceDate'];
+      user['checkInTime'] = x['checkInTime'];
     }
 
-    // if (user.is_LoggedIn)
+    // if (user.isLoggedIn)
     // {
     //   return user
     // }
@@ -35,8 +35,8 @@ export class AuthService {
       user.userName === LogInDto.userName &&
       user.password === LogInDto.password
     ) {
-      this.updateUser(user.user_id, { is_LoggedIn: true });
-      user.is_LoggedIn = true;
+      this.updateUser(user.userId, { isLoggedIn: true });
+      user.isLoggedIn = true;
       let session = await this.getUserSession(user.userName);
 
       if (session) {
@@ -50,7 +50,7 @@ export class AuthService {
   }
 
   async LogOut(logOutUserDto: logOutUserDto) {
-    this.updateUser(logOutUserDto.user_id, { is_LoggedIn: false });
+    this.updateUser(logOutUserDto.userId, { isLoggedIn: false });
 
     this.removeSession(logOutUserDto.userName);
   }
@@ -65,8 +65,8 @@ export class AuthService {
   }
 
   async updateUser(id: string, logInUserDto: logInUserDto) {
-    const resp = await this.prisma.user.update({
-      where: { user_id: id },
+    const resp = await this.prisma.users.update({
+      where: { userId: id },
       data: { ...logInUserDto },
     });
 
@@ -76,7 +76,7 @@ export class AuthService {
   async findUserAttendenceTime(id: string) {
     const attendence = await this.prisma.attendence.findMany({
       where: {
-        user_Id: id,
+        userId: id,
       },
     });
     return attendence[attendence.length - 1];
@@ -96,7 +96,7 @@ export class AuthService {
     return this.prisma.roles.findFirst({
       select: { permissions: true },
       where: {
-        role_id: id,
+        roleId: id,
       },
     });
   }
@@ -114,27 +114,27 @@ export class AuthService {
   async getSession() {
     let profile = await this.prisma.session.findMany({
       select: {
-        user_id: true,
+        userId: true,
         fName: true,
         lName: true,
         userName: true,
         fatherName: true,
-        joining_date: true,
-        is_LoggedIn: true,
-        role_id: true,
+        joiningDate: true,
+        isLoggedIn: true,
+        roleId: true,
         phone: true,
         emailOffice: true,
         address: true,
-        attendence_date: true,
-        check_in_time: true,
-        check_out_time: true,
-        profile_image: true,
+        attendenceDate: true,
+        checkInTime: true,
+        checkOutTime: true,
+        profileImage: true,
         designation: true,
       },
 
       orderBy: [
         {
-          date_updated: 'desc',
+          updatedAt: 'desc',
         },
       ],
       take: 1,
@@ -144,7 +144,7 @@ export class AuthService {
 
     if (profile.length > 0) {
       data['profile'] = profile[0];
-      let permissions = await this.findRole(data['profile']['role_id']);
+      let permissions = await this.findRole(data['profile']['roleId']);
       if (permissions['permissions'])
         data['permissions'] = this.makePermissions(permissions['permissions']);
     }
@@ -157,14 +157,14 @@ export class AuthService {
 
     let session = await this.prisma.session.create({
       data: {
-        session_id: MakeTimedIDUnique(),
+        sessionId: MakeTimedIDUnique(),
         ...createSessionDto,
         ...datesForCreate(),
       },
     });
 
     data['profile'] = session;
-    let permissions = await this.findRole(data['profile']['role_id']);
+    let permissions = await this.findRole(data['profile']['roleId']);
     if (permissions['permissions'])
       data['permissions'] = this.makePermissions(permissions['permissions']);
 

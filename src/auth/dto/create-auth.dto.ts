@@ -10,12 +10,12 @@ export class LogInDto {
 
 export class logInUserDto {
   @ApiProperty()
-  is_LoggedIn: boolean;
+  isLoggedIn: boolean;
 }
 
 export class logOutUserDto {
   @ApiProperty()
-  user_id: string;
+  userId: string;
 
   @ApiProperty()
   userName: string;
@@ -23,7 +23,7 @@ export class logOutUserDto {
 
 export class createSessionDto {
   @ApiProperty()
-  user_id: string;
+  userId: string;
   @ApiProperty()
   fName?: string;
 
@@ -40,16 +40,16 @@ export class createSessionDto {
   fatherName?: string;
 
   @ApiProperty()
-  joining_date?: bigint;
+  joiningDate?: bigint;
 
   @ApiProperty()
-  is_LoggedIn?: boolean;
+  isLoggedIn?: boolean;
 
   @ApiProperty()
-  is_CheckedIn?: boolean;
+  isCheckedIn?: boolean;
 
   @ApiProperty()
-  role_id?: string;
+  roleId?: string;
 
   @ApiProperty()
   emailOffice?: string;
@@ -61,25 +61,25 @@ export class createSessionDto {
   phone?: number;
 
   @ApiProperty()
-  date_updated?: bigint;
+  updatedAt?: bigint;
 
   @ApiProperty()
-  date_added?: bigint;
+  createdAt?: bigint;
 
   @ApiProperty()
-  is_deleted?: boolean;
+  isDeleted?: boolean;
 
   @ApiProperty()
-  attendence_date?: bigint;
+  attendenceDate?: bigint;
 
   @ApiProperty()
-  check_in_time?: bigint;
+  checkInTime?: bigint;
 
   @ApiProperty()
-  check_out_time?: bigint;
+  checkOutTime?: bigint;
 
   @ApiProperty()
-  profile_image?: string;
+  profileImage?: string;
 
   @ApiProperty()
   designation?: string;

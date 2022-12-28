@@ -9,12 +9,12 @@ export class SettingsService {
   constructor(private prisma: PrismaService) {}
 
   createRole(createRoleDto: CreateRoleDto) {
-    const createdAt = datesForCreate()['date_added'];
-    const updatedAt = datesForCreate()['date_updated'];
+    const createdAt = datesForCreate()['createdAt'];
+    const updatedAt = datesForCreate()['updatedAt'];
 
     return this.prisma.roles.create({
       data: {
-        role_id: MakeTimedIDUnique(),
+        roleId: MakeTimedIDUnique(),
         ...createRoleDto,
         createdAt,
         updatedAt,
@@ -35,7 +35,7 @@ export class SettingsService {
   async findAllRoles() {
     let roles = await this.prisma.roles.findMany({
       select: {
-        role_id: true,
+        roleId: true,
         title: true,
         scale: true,
         permissions: true,
@@ -48,14 +48,14 @@ export class SettingsService {
   findOne(id: string) {
     return this.prisma.roles.findFirst({
       where: {
-        role_id: id,
+        roleId: id,
       },
     });
   }
 
   async updateRole(id: string, updateSettingDto: UpdateSettingDto) {
     const role = await this.prisma.roles.update({
-      where: { role_id: id },
+      where: { roleId: id },
       data: { ...updateSettingDto },
     });
 

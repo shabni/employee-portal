@@ -1,16 +1,15 @@
-import { ApiProperty } from "@nestjs/swagger";
+import { ApiProperty } from '@nestjs/swagger';
 
 export class createCheckoutDto {
-    @ApiProperty()
-    attendence_date: bigint;
-  
-    @ApiProperty({ required: false })
-    user_Id: string;
+  @ApiProperty()
+  attendenceDate: bigint;
 
-    @ApiProperty({ required: false })
-    userName: string;
+  @ApiProperty({ required: false })
+  userId: string;
 
-    @ApiProperty()
-    check_out_time: bigint;
-  
+  @ApiProperty({ required: false })
+  userName: string;
+
+  @ApiProperty()
+  checkOutTime: bigint;
 }

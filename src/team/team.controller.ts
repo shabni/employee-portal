@@ -1,13 +1,4 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  Query,
-} from '@nestjs/common';
+import { Controller, Get, Param, Query } from '@nestjs/common';
 import { TeamService } from './team.service';
 import { ApiTags } from '@nestjs/swagger';
 
@@ -27,5 +18,13 @@ export class TeamController {
     @Query('attendenceDate') attendenceDate?: string,
   ) {
     return this.teamService.getTeamAttendence(attendenceDate, userId);
+  }
+
+  @Get('getTeamReports')
+  getTeamReports(
+    @Query('userId') userId?: string,
+    @Query('reportDate') reportDate?: string,
+  ) {
+    return this.teamService.getTeamReports(reportDate, userId);
   }
 }

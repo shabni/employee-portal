@@ -63,7 +63,7 @@ export class TeamService {
     const start = dateFns.startOfDay(dateFormat);
     const end = dateFns.endOfDay(dateFormat);
 
-    return { start, end };
+    return { start: start.getTime(), end: end.getTime() };
   }
 
   async getTeamAttendence(attendenceDate, userId) {
@@ -87,12 +87,12 @@ export class TeamService {
           { user_Id: element.user_id },
           {
             attendence_date: {
-              gt: start.getTime(),
+              gt: start,
             },
           },
           {
             attendence_date: {
-              lt: end.getTime(),
+              lt: end,
             },
           },
         ],
@@ -110,7 +110,65 @@ export class TeamService {
     return allUsers;
   }
 
-  update(id: number, updateTeamDto: UpdateTeamDto) {
-    return `This action updates a #${id} team`;
+  makeUserReportData(allUsers, reports) {
+    let reportsObject = {};
+
+    reports.forEach((element) => {
+      reportsObject[element.user_id] = element;
+    });
+
+    allUsers.forEach((element) => {
+      if (reportsObject.hasOwnProperty(element.user_id)) {
+        element['report_date'] = reportsObject[element.user_id]['report_date'];
+        element['description'] = reportsObject[element.user_id]['description'];
+      } else {
+        element['report_date'] = null;
+        element['description'] = null;
+      }
+    });
+
+    return allUsers;
+  }
+
+  async getTeamReports(attendenceDate, userId) {
+    const { start, end } = this.makeStEndDate(attendenceDate);
+
+    let userIdList: any[] = [];
+    let whereCondition: any[] = [];
+
+    userIdList = await this.prisma.user.findMany({
+      select: { user_id: true, fName: true, lName: true },
+      where: {
+        team_lead_id: userId,
+      },
+    });
+
+    userIdList.forEach((element) => {
+      whereCondition.push({
+        AND: [
+          { user_id: element.user_id },
+          {
+            report_date: {
+              gt: start - 1,
+            },
+          },
+          {
+            report_date: {
+              lt: end,
+            },
+          },
+        ],
+      });
+    });
+
+    let reports = await this.prisma.reports.findMany({
+      where: {
+        OR: whereCondition,
+      },
+    });
+
+    let allUsers = this.makeUserReportData(userIdList, reports);
+
+    return allUsers;
   }
 }

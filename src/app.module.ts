@@ -8,9 +8,10 @@ import { AuthModule } from './auth/auth.module';
 import { SettingsModule } from './settings/settings.module';
 import { ReportsModule } from './reports/reports.module';
 import { CustomSocketModule } from './custom-socket/custom-socket.module';
+import { TeamModule } from './team/team.module';
 
 @Module({
-  imports: [PrismaModule, UserModule, AttendenceModule, AuthModule, SettingsModule, ReportsModule, CustomSocketModule],
+  imports: [PrismaModule, UserModule, AttendenceModule, AuthModule, SettingsModule, ReportsModule, CustomSocketModule, TeamModule],
   controllers: [AppController],
   providers: [AppService],
 })

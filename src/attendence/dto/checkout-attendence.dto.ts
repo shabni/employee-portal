@@ -1,15 +1,22 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { IsNumber, IsString, IsNotEmpty } from 'class-validator';
 
 export class createCheckoutDto {
-  @ApiProperty()
+  @IsNumber()
+  @ApiProperty({ required: true })
   attendenceDate: bigint;
 
-  @ApiProperty({ required: false })
+  @IsString()
+  @IsNotEmpty()
+  @ApiProperty({ required: true })
   userId: string;
 
-  @ApiProperty({ required: false })
+  @IsString()
+  @IsNotEmpty()
+  @ApiProperty({ required: true })
   userName: string;
 
-  @ApiProperty()
-  checkOutTime: bigint;
+  @IsNumber()
+  @ApiProperty({ required: true })
+  checkOutTime?: bigint;
 }

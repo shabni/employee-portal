@@ -1,10 +1,22 @@
 import { ApiProperty } from '@nestjs/swagger';
+import {
+  IsNumber,
+  IsOptional,
+  IsString,
+  IsNotEmpty,
+  IsEmail,
+  IsBoolean,
+} from 'class-validator';
 
 export class LogInDto {
-  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  @ApiProperty({ required: true })
   userName: string;
 
-  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  @ApiProperty({ required: true })
   password: string;
 }
 
@@ -14,73 +26,109 @@ export class logInUserDto {
 }
 
 export class logOutUserDto {
-  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  @ApiProperty({ required: true })
   userId: string;
 
-  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  @ApiProperty({ required: true })
   userName: string;
 }
 
 export class createSessionDto {
-  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  @ApiProperty({ required: true })
   userId: string;
-  @ApiProperty()
+
+  @IsString()
+  @IsNotEmpty()
+  @ApiProperty({ required: false })
   fName?: string;
 
-  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  @ApiProperty({ required: false })
   lName?: string;
 
-  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  @ApiProperty({ required: true })
   userName: string;
 
-  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  @ApiProperty({ required: true })
   password: string;
 
-  @ApiProperty()
+  @IsOptional()
+  @IsString()
+  @IsNotEmpty()
+  @ApiProperty({ required: false })
   fatherName?: string;
 
-  @ApiProperty()
+  @IsOptional()
+  @IsNumber()
+  @ApiProperty({ required: false })
   joiningDate?: bigint;
 
-  @ApiProperty()
+  @IsOptional()
+  @IsBoolean()
+  @ApiProperty({ required: false })
   isLoggedIn?: boolean;
 
-  @ApiProperty()
+  @IsOptional()
+  @IsBoolean()
+  @ApiProperty({ required: false })
   isCheckedIn?: boolean;
 
-  @ApiProperty()
+  @IsOptional()
+  @IsString()
+  @IsNotEmpty()
+  @ApiProperty({ required: false })
   roleId?: string;
 
-  @ApiProperty()
+  @IsOptional()
+  @IsString()
+  @IsNotEmpty()
+  @ApiProperty({ required: false })
   emailOffice?: string;
 
-  @ApiProperty()
+  @IsOptional()
+  @IsString()
+  @IsNotEmpty()
+  @ApiProperty({ required: false })
   address?: string;
 
-  @ApiProperty()
+  @IsOptional()
+  @IsNumber()
+  @ApiProperty({ required: false })
   phone?: number;
 
-  @ApiProperty()
-  updatedAt?: bigint;
-
-  @ApiProperty()
-  createdAt?: bigint;
-
-  @ApiProperty()
-  isDeleted?: boolean;
-
-  @ApiProperty()
+  @IsOptional()
+  @IsNumber()
+  @ApiProperty({ required: false })
   attendenceDate?: bigint;
 
-  @ApiProperty()
+  @IsOptional()
+  @IsNumber()
+  @ApiProperty({ required: false })
   checkInTime?: bigint;
 
-  @ApiProperty()
+  @IsOptional()
+  @IsNumber()
+  @ApiProperty({ required: false })
   checkOutTime?: bigint;
 
-  @ApiProperty()
+  @IsString()
+  @IsOptional()
+  @ApiProperty({ required: false })
   profileImage?: string;
 
-  @ApiProperty()
+  @IsString()
+  @IsOptional()
+  @ApiProperty({ required: false })
   designation?: string;
 }

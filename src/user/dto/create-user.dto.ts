@@ -1,45 +1,78 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotNull } from '@nestjsi/class-validator';
-import { IsNumber, IsOptional, IsString } from 'class-validator';
+import {
+  IsNumber,
+  IsOptional,
+  IsString,
+  IsNotEmpty,
+  IsEmail,
+} from 'class-validator';
 
 export class CreateUserDto {
-  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  @ApiProperty({ required: true })
   fName: string;
 
+  @IsString()
+  @IsOptional()
   @ApiProperty({ required: false })
   lName: string;
 
+  @IsString()
+  @IsOptional()
   @ApiProperty({ required: false })
-  fatherName: string;
+  fatherName?: string;
 
-  @ApiProperty({ required: false })
+  @IsString()
+  @IsNotEmpty()
+  @ApiProperty({ required: true })
   userName: string;
 
+  @IsString()
+  @IsNotEmpty()
   @ApiProperty({ required: true })
   password: string;
 
   @IsNumber()
   @ApiProperty({ required: true })
-  phone: number;
-
-  @ApiProperty({ required: false })
   joiningDate: bigint;
 
-  @ApiProperty()
+  @IsNumber()
+  @ApiProperty({ required: true })
+  phone: number;
+
+  @IsString()
+  @IsNotEmpty()
+  @ApiProperty({ required: true })
   nic: string;
 
+  @IsEmail()
+  @IsOptional()
   @ApiProperty({ required: false })
   emailOffice: string;
 
-  @ApiProperty()
+  @IsString()
+  @IsOptional()
+  @ApiProperty({ required: false })
   roleId: string;
 
+  @IsString()
+  @IsOptional()
+  @ApiProperty({ required: false })
+  address: string;
+
+  @IsString()
+  @IsOptional()
   @ApiProperty({ required: false })
   profileImage?: string;
 
+  @IsString()
+  @IsOptional()
   @ApiProperty({ required: false })
   designation?: string;
 
-  @ApiProperty()
+  @IsString()
+  @IsOptional()
+  @ApiProperty({ required: false })
   teamLeadId?: string;
 }

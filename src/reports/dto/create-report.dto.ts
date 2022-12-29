@@ -1,15 +1,18 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotNull } from '@nestjsi/class-validator';
+import { IsNumber, IsString, IsNotEmpty } from 'class-validator';
 
 export class CreateReportDto {
-  @IsNotNull()
-  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  @ApiProperty({ required: true })
   description: string;
 
-  @ApiProperty()
+  @IsNumber()
+  @ApiProperty({ required: true })
   reportDate: bigint;
 
-  @IsNotNull()
-  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  @ApiProperty({ required: true })
   userId: string;
 }

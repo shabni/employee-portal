@@ -1,18 +1,27 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { IsNumber, IsOptional, IsString, IsNotEmpty } from 'class-validator';
 
 export class CreateAttendenceDto {
-  @ApiProperty()
+  @IsNumber()
+  @ApiProperty({ required: true })
   attendenceDate: bigint;
 
-  @ApiProperty()
+  @IsNumber()
+  @ApiProperty({ required: true })
   checkInTime: bigint;
 
+  @IsOptional()
+  @IsNumber()
   @ApiProperty()
   checkOutTime?: bigint;
 
-  @ApiProperty({ required: false })
+  @IsString()
+  @IsNotEmpty()
+  @ApiProperty({ required: true })
   userId: string;
 
-  @ApiProperty({ required: false })
+  @IsString()
+  @IsNotEmpty()
+  @ApiProperty({ required: true })
   userName: string;
 }

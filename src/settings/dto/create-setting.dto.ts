@@ -1,15 +1,21 @@
-import { ApiProperty } from "@nestjs/swagger";
+import { ApiProperty } from '@nestjs/swagger';
+import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
 export class CreateSettingDto {}
 
-export class CreateRoleDto{
-    @ApiProperty({required:true})
-    title: string;
+export class CreateRoleDto {
+  @IsString()
+  @IsNotEmpty()
+  @ApiProperty({ required: true })
+  title: string;
 
-    @ApiProperty({required:true})
-    scale: number;
+  @IsNumber()
+  @IsNotEmpty()
+  @ApiProperty({ required: true })
+  scale: number;
 
-    @ApiProperty({})
-    permissions: string;
-
+  @IsString()
+  @IsNotEmpty()
+  @ApiProperty({ required: true })
+  permissions: string;
 }

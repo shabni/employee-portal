@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { throwError } from 'rxjs';
 import {
   datesForCreate,
@@ -24,33 +24,38 @@ export class AuthService {
       },
     });
 
-    if (user.isCheckedIn) {
-      let x = await this.findUserAttendenceTime(user.userId);
-      user['attendenceDate'] = x['attendenceDate'];
-      user['checkInTime'] = x['checkInTime'];
-    }
-
-    // if (user.isLoggedIn)
-    // {
-    //   return user
-    // }
-
-    if (
-      user.userName === LogInDto.userName &&
-      user.password === LogInDto.password
-    ) {
-      this.updateUser(user.userId, { isLoggedIn: true });
-      user.isLoggedIn = true;
-      let session = await this.getUserSession(user.userId);
-
-      if (session) {
-        session['sessionExist'] = true;
-        return session;
-      } else {
-        user['sessionExist'] = false;
-        return user;
+    if (user) {
+      if (user?.isCheckedIn) {
+        let x = await this.findUserAttendenceTime(user.userId);
+        user['attendenceDate'] = x['attendenceDate'];
+        user['checkInTime'] = x['checkInTime'];
       }
-    } else throwError;
+
+      // if (user.isLoggedIn)
+      // {
+      //   return user
+      // }
+
+      if (
+        user?.userName === LogInDto.userName &&
+        user?.password === LogInDto.password
+      ) {
+        this.updateUser(user.userId, { isLoggedIn: true });
+        user.isLoggedIn = true;
+        let session = await this.getUserSession(user.userId);
+
+        if (session) {
+          session['sessionExist'] = true;
+          return session;
+        } else {
+          user['sessionExist'] = false;
+          return user;
+        }
+      } else
+        throw new UnauthorizedException(
+          'User name and password does not match!',
+        );
+    } else throw new UnauthorizedException('User does not exist!');
   }
 
   async LogOut(logOutUserDto: logOutUserDto) {

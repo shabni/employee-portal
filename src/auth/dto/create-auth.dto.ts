@@ -30,11 +30,6 @@ export class logOutUserDto {
   @IsNotEmpty()
   @ApiProperty({ required: true })
   userId: string;
-
-  @IsString()
-  @IsNotEmpty()
-  @ApiProperty({ required: true })
-  userName: string;
 }
 
 export class createSessionDto {

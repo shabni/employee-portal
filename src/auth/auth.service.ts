@@ -41,7 +41,7 @@ export class AuthService {
     ) {
       this.updateUser(user.userId, { isLoggedIn: true });
       user.isLoggedIn = true;
-      let session = await this.getUserSession(user.userName);
+      let session = await this.getUserSession(user.userId);
 
       if (session) {
         session['sessionExist'] = true;
@@ -56,13 +56,13 @@ export class AuthService {
   async LogOut(logOutUserDto: logOutUserDto) {
     this.updateUser(logOutUserDto.userId, { isLoggedIn: false });
 
-    this.removeSession(logOutUserDto.userName);
+    this.removeSession(logOutUserDto.userId);
   }
 
-  async removeSession(userName: string) {
+  async removeSession(userId: string) {
     const dleted = await this.prisma.session.deleteMany({
       where: {
-        userName: userName,
+        userId: userId,
       },
     });
     return dleted;

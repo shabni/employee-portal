@@ -59,11 +59,14 @@ export class TeamService {
   }
 
   makeStEndDate(attendenceDate) {
-    const dateFormat = new Date(attendenceDate / 1000);
+    const dateFormat = new Date(attendenceDate * 1000);
     const start = dateFns.startOfDay(dateFormat);
     const end = dateFns.endOfDay(dateFormat);
 
-    return { start: start.getTime(), end: end.getTime() };
+    return {
+      start: Math.floor(start.getTime() / 1000),
+      end: Math.floor(end.getTime() / 1000),
+    };
   }
 
   async getTeamAttendence(attendenceDate, userId) {

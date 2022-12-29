@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param } from '@nestjs/common';
 import { ReportsService } from './reports.service';
 import { CreateReportDto } from './dto/create-report.dto';
 import { UpdateReportDto } from './dto/update-report.dto';
@@ -19,18 +19,11 @@ export class ReportsController {
     return this.reportsService.getUserReport(id);
   }
 
-  // @Get(':id')
-  // findOne(@Param('id') id: string) {
-  //   return this.reportsService.findOne(+id);
-  // }
-
   @Patch(':updateReport/:id')
-  updateReport(@Param('id') id: string, @Body() updateReportDto: UpdateReportDto) {
+  updateReport(
+    @Param('id') id: string,
+    @Body() updateReportDto: UpdateReportDto,
+  ) {
     return this.reportsService.updateReport(id, updateReportDto);
   }
-
-  // @Delete(':id')
-  // remove(@Param('id') id: string) {
-  //   return this.reportsService.remove(+id);
-  // }
 }

@@ -1,11 +1,19 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @Controller('api/user')
-@ApiTags('user')
+@ApiTags('Users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
@@ -14,12 +22,12 @@ export class UserController {
     return this.userService.create(createUserDto);
   }
 
-  @Get('/getEmployees')
+  @Get('getEmployees')
   findAll() {
     return this.userService.findAll();
   }
 
-  @Get('/getTeamLeads/:roleId')
+  @Get('getTeamLeads/:roleId')
   getTeamLeads(@Param('roleId') roleId: string) {
     return this.userService.getTeamLeads(roleId);
   }
@@ -32,10 +40,5 @@ export class UserController {
   @Patch('updateEmployee/:id')
   updateUser(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     return this.userService.updateUser(id, updateUserDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.userService.remove(+id);
   }
 }

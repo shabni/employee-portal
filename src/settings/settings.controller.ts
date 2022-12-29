@@ -5,7 +5,6 @@ import {
   Body,
   Patch,
   Param,
-  Delete,
   UseInterceptors,
   UploadedFile,
   Res,
@@ -21,21 +20,21 @@ import { v4 as uuidv4 } from 'uuid';
 import { join } from 'path';
 
 @Controller('api/settings')
-@ApiTags('settings')
+@ApiTags('Settings')
 export class SettingsController {
   constructor(private readonly settingsService: SettingsService) {}
 
-  @Post('/createRole')
+  @Post('createRole')
   createRole(@Body() createRoleDto: CreateRoleDto) {
     return this.settingsService.createRole(createRoleDto);
   }
 
-  @Get('/getScales')
+  @Get('getScales')
   getScales() {
     return { scales: ['1', '2', '3', '4', '5'] };
   }
 
-  @Get('/getRoles')
+  @Get('getRoles')
   findAllRoles() {
     return this.settingsService.findAllRoles();
   }

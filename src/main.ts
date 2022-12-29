@@ -2,7 +2,8 @@ import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
-import { HttpExceptionFilter } from './prisma/prisma-client-exception.filter';
+import { PrismaClientExceptionFilter } from './prisma/prisma-client-exception.filter';
+// import { HttpExceptionFilter } from './prisma/http-errors-exceptions.filter';
 
 (BigInt.prototype as any).toJSON = function () {
   return Number(this);
@@ -11,7 +12,8 @@ import { HttpExceptionFilter } from './prisma/prisma-client-exception.filter';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  app.useGlobalFilters(new HttpExceptionFilter());
+  app.useGlobalFilters(new PrismaClientExceptionFilter());
+  // app.useGlobalFilters(new HttpExceptionFilter());
   app.useGlobalPipes(new ValidationPipe());
 
   const config = new DocumentBuilder()

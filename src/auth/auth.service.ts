@@ -1,6 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { throwError } from 'rxjs';
-import { datesForCreate, MakeTimedIDUnique } from 'src/common/helper';
+import {
+  datesForCreate,
+  MakeTimedIDUnique,
+  unixTimestamp,
+} from 'src/common/helper';
 import { PrismaService } from 'src/prisma/prisma.service';
 import {
   LogInDto,
@@ -67,7 +71,7 @@ export class AuthService {
   async updateUser(id: string, logInUserDto: logInUserDto) {
     const resp = await this.prisma.users.update({
       where: { userId: id },
-      data: { ...logInUserDto },
+      data: { ...logInUserDto, updatedAt: unixTimestamp() },
     });
 
     return resp;
@@ -174,7 +178,7 @@ export class AuthService {
   async updateSession(userName: string, updateSessionDto: any) {
     const resp = await this.prisma.session.update({
       where: { userName: userName },
-      data: { ...updateSessionDto },
+      data: { ...updateSessionDto, updatedAt: unixTimestamp() },
     });
 
     return resp;

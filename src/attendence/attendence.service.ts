@@ -1,5 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { datesForCreate, MakeTimedIDUnique } from 'src/common/helper';
+import {
+  datesForCreate,
+  MakeTimedIDUnique,
+  unixTimestamp,
+} from 'src/common/helper';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateAttendenceDto } from './dto/create-attendence.dto';
 import { UpdateAttendenceDto } from './dto/update-attendence.dto';
@@ -112,7 +116,7 @@ export class AttendenceService {
   async update(id: string, updateAttendenceDto: UpdateAttendenceDto) {
     const resp = await this.prisma.attendence.update({
       where: { attendenceId: id },
-      data: { ...updateAttendenceDto },
+      data: { ...updateAttendenceDto, updatedAt: unixTimestamp() },
     });
 
     return resp;

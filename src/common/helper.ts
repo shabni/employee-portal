@@ -4,6 +4,10 @@ export function datesForCreate() {
   return { createdAt: dateInTimeStamp, updatedAt: dateInTimeStamp };
 }
 
+export function unixTimestamp(): number {
+  return Math.round(timeStampMilliseconds() / 1000);
+}
+
 function timeStampMilliseconds(): number {
   return new Date().getTime();
 }

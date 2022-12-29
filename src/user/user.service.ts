@@ -1,5 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { datesForCreate, MakeTimedIDUnique } from 'src/common/helper';
+import {
+  datesForCreate,
+  MakeTimedIDUnique,
+  unixTimestamp,
+} from 'src/common/helper';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -9,7 +13,6 @@ export class UserService {
   constructor(private prisma: PrismaService) {}
 
   create(createUserDto: CreateUserDto) {
-    console.log(createUserDto, '-------------');
     return this.prisma.users.create({
       data: {
         userId: MakeTimedIDUnique(),
@@ -20,7 +23,6 @@ export class UserService {
   }
 
   findAll() {
-    // return `This action returns all user`;
     return this.prisma.users.findMany({
       select: {
         userId: true,
@@ -51,18 +53,10 @@ export class UserService {
     });
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} user`;
-  }
-
   async updateUser(id: string, logInUserDto: any) {
     const resp = await this.prisma.users.update({
       where: { userId: id },
-      data: { ...logInUserDto },
+      data: { ...logInUserDto, updatedAt: unixTimestamp() },
     });
 
     return resp;

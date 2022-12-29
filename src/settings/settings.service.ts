@@ -1,5 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { datesForCreate, MakeTimedIDUnique } from 'src/common/helper';
+import {
+  datesForCreate,
+  MakeTimedIDUnique,
+  unixTimestamp,
+} from 'src/common/helper';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateRoleDto, CreateSettingDto } from './dto/create-setting.dto';
 import { UpdateSettingDto } from './dto/update-setting.dto';
@@ -52,13 +56,9 @@ export class SettingsService {
   async updateRole(id: string, updateSettingDto: UpdateSettingDto) {
     const role = await this.prisma.roles.update({
       where: { roleId: id },
-      data: { ...updateSettingDto },
+      data: { ...updateSettingDto, updatedAt: unixTimestamp() },
     });
 
     return role;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} setting`;
   }
 }

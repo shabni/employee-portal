@@ -9,15 +9,11 @@ export class SettingsService {
   constructor(private prisma: PrismaService) {}
 
   createRole(createRoleDto: CreateRoleDto) {
-    const createdAt = datesForCreate()['createdAt'];
-    const updatedAt = datesForCreate()['updatedAt'];
-
     return this.prisma.roles.create({
       data: {
         roleId: MakeTimedIDUnique(),
         ...createRoleDto,
-        createdAt,
-        updatedAt,
+        ...datesForCreate(),
       },
     });
   }

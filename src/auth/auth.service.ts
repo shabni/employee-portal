@@ -26,31 +26,41 @@ export class AuthService {
     });
 
     if (user) {
-      if (user?.isCheckedIn) {
-        let x = await this.findUserAttendenceTime(user.userId);
-        user['attendenceDate'] = x['attendenceDate'];
-        user['checkInTime'] = x['checkInTime'];
-      }
-
       if (
-        user?.userName === LogInDto.userName &&
-        user?.password === LogInDto.password
+        user.userName === LogInDto.userName &&
+        user.password === LogInDto.password
       ) {
         const token = await this.logInToken(user.userId, user.userName);
         this.updateUser(user.userId, { isLoggedIn: true });
-        user.isLoggedIn = true;
+
         let session = await this.getUserSession(user.userId);
 
         if (Object.keys(session).length > 0) {
-          session['token'] = token;
-          session['sessionExist'] = true;
           session['profile']['token'] = token;
 
           return session;
         } else {
-          user['token'] = token;
-          user['sessionExist'] = false;
-          return user;
+          let payload = {
+            userId: user.userId,
+            fName: user.fName,
+            lName: user.lName,
+            userName: user.userName,
+            password: user.password,
+            joiningDate: user.joiningDate,
+            phone: user.phone,
+            isLoggedIn: user.isLoggedIn,
+            isCheckedIn: user.isCheckedIn,
+            emailOffice: user.emailOffice,
+            address: user.address,
+            roleId: user.roleId,
+            profileImage: user.profileImage,
+            designation: user.designation,
+          };
+
+          let session = await this.createSession(payload);
+          session['profile']['token'] = token;
+
+          return session;
         }
       } else
         throw new UnauthorizedException(
@@ -103,6 +113,7 @@ export class AuthService {
         fatherName: true,
         joiningDate: true,
         isLoggedIn: true,
+        isCheckedIn: true,
         roleId: true,
         phone: true,
         emailOffice: true,
@@ -121,6 +132,12 @@ export class AuthService {
     if (session) {
       data['session'] = true;
       data['profile'] = session;
+
+      if (session.isCheckedIn) {
+        let x = await this.findUserAttendenceTime(session.userId);
+        data['profile']['attendenceDate'] = x['attendenceDate'];
+        data['profile']['checkInTime'] = x['checkInTime'];
+      }
       let permissions = await this.findRole(data['profile']['roleId']);
       if (permissions['permissions'])
         data['permissions'] = this.makePermissions(permissions['permissions']);
@@ -176,6 +193,13 @@ export class AuthService {
     let permissions = await this.findRole(data['profile']['roleId']);
     if (permissions['permissions'])
       data['permissions'] = this.makePermissions(permissions['permissions']);
+
+    if (data['profile'].isCheckedIn) {
+      let x = await this.findUserAttendenceTime(data['profile'].userId);
+      data['profile']['isCheckedIn'] = x['isCheckedIn'];
+      data['profile']['attendenceDate'] = x['attendenceDate'];
+      data['profile']['checkInTime'] = x['checkInTime'];
+    }
 
     return data;
   }

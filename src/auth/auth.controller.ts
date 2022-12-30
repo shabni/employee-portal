@@ -27,8 +27,8 @@ export class AuthController {
     return this.authService.createSession(createAuthDto);
   }
 
-  @Get('session')
-  getSession() {
-    return this.authService.getSession();
+  @Post('session')
+  getSession(@Body() token: any) {
+    return this.authService.getSession(token);
   }
 }

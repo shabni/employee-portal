@@ -10,14 +10,22 @@ export class PrismaClientExceptionFilter extends BaseExceptionFilter {
     const response = context.getResponse<Response>();
     const message = exception.message.replace(/\n/g, '');
 
-    console.log('====================>>>', exception.code);
-
     switch (exception.code) {
       case 'P2002': {
         const status = HttpStatus.CONFLICT;
         response.status(status).json({
           statusCode: status,
           message: message,
+        });
+        break;
+      }
+      case 'P2003': {
+        const status = HttpStatus.CONFLICT;
+
+        let columnName = exception.meta.field_name;
+        response.status(status).json({
+          statusCode: status,
+          message: `Must be valid ${columnName}`,
         });
         break;
       }

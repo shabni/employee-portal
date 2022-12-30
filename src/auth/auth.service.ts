@@ -32,11 +32,6 @@ export class AuthService {
         user['checkInTime'] = x['checkInTime'];
       }
 
-      // if (user.isLoggedIn)
-      // {
-      //   return user
-      // }
-
       if (
         user?.userName === LogInDto.userName &&
         user?.password === LogInDto.password
@@ -46,14 +41,12 @@ export class AuthService {
         user.isLoggedIn = true;
         let session = await this.getUserSession(user.userId);
 
-        if (session) {
-          let data = {};
-          data['profile'] = session;
-          data['permissions'] = await this.findRole(session.roleId);
+        if (Object.keys(session).length > 0) {
           session['token'] = token;
-          data['sessionExist'] = true;
+          session['sessionExist'] = true;
+          session['profile']['token'] = token;
 
-          return data;
+          return session;
         } else {
           user['token'] = token;
           user['sessionExist'] = false;
@@ -100,13 +93,40 @@ export class AuthService {
   }
 
   async getUserSession(userId) {
+    let data = {};
     const session = await this.prisma.session.findFirst({
+      select: {
+        userId: true,
+        fName: true,
+        lName: true,
+        userName: true,
+        fatherName: true,
+        joiningDate: true,
+        isLoggedIn: true,
+        roleId: true,
+        phone: true,
+        emailOffice: true,
+        address: true,
+        attendenceDate: true,
+        checkInTime: true,
+        checkOutTime: true,
+        profileImage: true,
+        designation: true,
+      },
       where: {
         userId,
       },
     });
 
-    return session;
+    if (session) {
+      data['session'] = true;
+      data['profile'] = session;
+      let permissions = await this.findRole(data['profile']['roleId']);
+      if (permissions['permissions'])
+        data['permissions'] = this.makePermissions(permissions['permissions']);
+    }
+
+    return data;
   }
 
   findRole(id: string) {
@@ -133,40 +153,7 @@ export class AuthService {
 
     if (token.token) {
       var decoded = jwt_decode(token.token);
-
-      let profile = await this.prisma.session.findFirst({
-        select: {
-          userId: true,
-          fName: true,
-          lName: true,
-          userName: true,
-          fatherName: true,
-          joiningDate: true,
-          isLoggedIn: true,
-          roleId: true,
-          phone: true,
-          emailOffice: true,
-          address: true,
-          attendenceDate: true,
-          checkInTime: true,
-          checkOutTime: true,
-          profileImage: true,
-          designation: true,
-        },
-        where: {
-          userId: decoded['userId'],
-        },
-      });
-
-      if (profile) {
-        data['session'] = true;
-        data['profile'] = profile;
-        let permissions = await this.findRole(data['profile']['roleId']);
-        if (permissions['permissions'])
-          data['permissions'] = this.makePermissions(
-            permissions['permissions'],
-          );
-      }
+      data = await this.getUserSession(decoded['userId']);
     } else {
       data['session'] = false;
     }
@@ -212,10 +199,5 @@ export class AuthService {
     return this.jwt.signAsync(payload, {
       secret: seceret,
     });
-  }
-
-  validate(payload: any) {
-    console.log(payload);
-    return payload;
   }
 }

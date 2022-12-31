@@ -44,22 +44,28 @@ export class UserService {
     });
   }
 
-  findOne(id: string) {
-    return this.prisma.users.findFirstOrThrow({
+  async findOne(id: string) {
+    let data = {};
+    const user = await this.prisma.users.findFirst({
       select: {
         fName: true,
       },
       where: { userId: id },
     });
+    if (user) data = user;
+    return data;
   }
 
   async updateUser(id: string, logInUserDto: any) {
-    const resp = await this.prisma.users.update({
-      where: { userId: id },
-      data: { ...logInUserDto, updatedAt: unixTimestamp() },
-    });
-
-    return resp;
+    try {
+      const resp = await this.prisma.users.update({
+        where: { userId: id },
+        data: { ...logInUserDto, updatedAt: unixTimestamp() },
+      });
+      return resp;
+    } catch (exception) {
+      throw exception;
+    }
   }
 
   findRole(id: string) {
@@ -86,15 +92,18 @@ export class UserService {
 
   async getTeamLeads(roleId: string) {
     let scale = await this.findRole(roleId);
-    let roles = await this.findGreaterRoles(scale.scale);
-    const resp = await this.prisma.users.findMany({
-      select: {
-        userId: true,
-        fName: true,
-      },
-      where: { OR: roles },
-    });
 
-    return resp;
+    let data = {};
+    if (scale) {
+      let roles = await this.findGreaterRoles(scale.scale);
+      data = await this.prisma.users.findMany({
+        select: {
+          userId: true,
+          fName: true,
+        },
+        where: { OR: roles },
+      });
+    }
+    return data;
   }
 }

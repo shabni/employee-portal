@@ -106,14 +106,6 @@ export class AttendenceService {
     });
   }
 
-  findAll() {
-    return this.prisma.attendence.findMany();
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} attendence`;
-  }
-
   async update(id: string, updateAttendenceDto: UpdateAttendenceDto) {
     const resp = await this.prisma.attendence.update({
       where: { attendenceId: id },

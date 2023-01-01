@@ -33,16 +33,6 @@ export class AttendenceController {
     return this.attendenceService.getUserAttendence(id);
   }
 
-  @Get()
-  findAll() {
-    return this.attendenceService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.attendenceService.findOne(+id);
-  }
-
   @Patch(':id')
   update(
     @Param('id') id: string,

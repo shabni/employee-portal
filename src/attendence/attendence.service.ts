@@ -20,12 +20,11 @@ export class AttendenceService {
   ) {}
 
   async checkIn(createAttendenceDto: CreateAttendenceDto) {
-    this.userService.updateUser(createAttendenceDto.userId, {
+    await this.userService.updateUser(createAttendenceDto.userId, {
       isCheckedIn: true,
     });
 
-    let userName = createAttendenceDto.userName;
-    delete createAttendenceDto.userName;
+    let userId = createAttendenceDto.userId;
 
     let attendence = await this.createAttendence(createAttendenceDto);
 
@@ -35,7 +34,7 @@ export class AttendenceService {
       attendenceDate: attendence['attendenceDate'],
     };
 
-    this.authService.updateSession(userName, payload);
+    this.authService.updateSession(userId, payload);
 
     return attendence;
   }
@@ -53,8 +52,7 @@ export class AttendenceService {
   }
 
   async createOut(createCheckoutDto: createCheckoutDto) {
-    let userName = createCheckoutDto.userName;
-    delete createCheckoutDto.userName;
+    let userId = createCheckoutDto.userId;
 
     let id = await this.prisma.attendence.findFirst({
       select: { attendenceId: true },
@@ -77,7 +75,7 @@ export class AttendenceService {
       attendenceDate: null,
     };
 
-    this.authService.updateSession(userName, payload);
+    this.authService.updateSession(userId, payload);
 
     return this.update(id['attendenceId'], {
       checkOutTime: createCheckoutDto['checkOutTime'],

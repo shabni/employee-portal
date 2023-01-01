@@ -204,9 +204,9 @@ export class AuthService {
     return data;
   }
 
-  async updateSession(userName: string, updateSessionDto: any) {
+  async updateSession(userId: string, updateSessionDto: any) {
     const resp = await this.prisma.session.update({
-      where: { userName: userName },
+      where: { userId },
       data: { ...updateSessionDto, updatedAt: unixTimestamp() },
     });
 

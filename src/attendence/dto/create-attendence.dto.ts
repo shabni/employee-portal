@@ -19,9 +19,4 @@ export class CreateAttendenceDto {
   @IsNotEmpty()
   @ApiProperty({ required: true })
   userId: string;
-
-  @IsString()
-  @IsNotEmpty()
-  @ApiProperty({ required: true })
-  userName: string;
 }

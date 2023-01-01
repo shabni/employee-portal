@@ -65,7 +65,7 @@ model Attendence {
 
 model Session {
   sessionId      String   @id
-  userId         String
+  userId         String   @unique
   fName          String?
   lName          String?
   userName       String   @unique

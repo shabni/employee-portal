@@ -11,11 +11,6 @@ export class createCheckoutDto {
   @ApiProperty({ required: true })
   userId: string;
 
-  @IsString()
-  @IsNotEmpty()
-  @ApiProperty({ required: true })
-  userName: string;
-
   @IsNumber()
   @ApiProperty({ required: true })
   checkOutTime?: bigint;

@@ -13,13 +13,13 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('logIn')
-  logIn(@Body() createAuthDto: LogInDto) {
-    return this.authService.LogIn(createAuthDto);
+  logIn(@Body() logInDto: LogInDto) {
+    return this.authService.LogIn(logInDto);
   }
 
   @Post('logOut')
-  logOut(@Body() createAuthDto: logOutUserDto) {
-    return this.authService.LogOut(createAuthDto);
+  logOut(@Body() logOutDto: logOutUserDto) {
+    return this.authService.LogOut(logOutDto);
   }
 
   @Post('createSession')

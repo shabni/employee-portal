@@ -70,18 +70,17 @@ export class AuthService {
   }
 
   async LogOut(logOutUserDto: logOutUserDto) {
-    this.updateUser(logOutUserDto.userId, { isLoggedIn: false });
-
-    this.removeSession(logOutUserDto.userId);
+    await this.updateUser(logOutUserDto.userId, { isLoggedIn: false });
+    await this.removeSession(logOutUserDto.userId);
   }
 
   async removeSession(userId: string) {
-    const dleted = await this.prisma.session.deleteMany({
+    const removed = await this.prisma.session.deleteMany({
       where: {
         userId: userId,
       },
     });
-    return dleted;
+    return removed;
   }
 
   async updateUser(id: string, logInUserDto: logInUserDto) {

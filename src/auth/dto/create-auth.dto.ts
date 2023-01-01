@@ -127,3 +127,10 @@ export class createSessionDto {
   @ApiProperty({ required: false })
   designation?: string;
 }
+
+export class getSessionDto {
+  @IsString()
+  @IsNotEmpty()
+  @ApiProperty({ required: true })
+  token: string;
+}

@@ -5,6 +5,7 @@ import {
   LogInDto,
   logOutUserDto,
   createSessionDto,
+  getSessionDto,
 } from './dto/create-auth.dto';
 
 @Controller('api/auth')
@@ -28,7 +29,7 @@ export class AuthController {
   }
 
   @Post('session')
-  getSession(@Body() token: any) {
+  getSession(@Body() token: getSessionDto) {
     return this.authService.getSession(token);
   }
 }

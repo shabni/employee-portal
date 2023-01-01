@@ -157,6 +157,7 @@ export class AuthService {
           roleId: id,
         },
       });
+      return role;
     } catch (error) {
       throw new NotFoundException('Role does not exist');
     }

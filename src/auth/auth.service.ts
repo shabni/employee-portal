@@ -1,4 +1,8 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt/dist';
 import jwt_decode from 'jwt-decode';
 import {
@@ -145,13 +149,17 @@ export class AuthService {
     return data;
   }
 
-  findRole(id: string) {
-    return this.prisma.roles.findFirst({
-      select: { permissions: true },
-      where: {
-        roleId: id,
-      },
-    });
+  async findRole(id: string) {
+    try {
+      const role = await this.prisma.roles.findUniqueOrThrow({
+        select: { permissions: true },
+        where: {
+          roleId: id,
+        },
+      });
+    } catch (error) {
+      throw new NotFoundException('Role does not exist');
+    }
   }
 
   makePermissions(permissions: string) {

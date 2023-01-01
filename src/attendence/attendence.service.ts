@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import {
   datesForCreate,
   MakeTimedIDUnique,
@@ -65,21 +65,24 @@ export class AttendenceService {
         ],
       },
     });
-    this.userService.updateUser(createCheckoutDto.userId, {
-      isCheckedIn: false,
-    });
 
-    let payload = {
-      isCheckedIn: false,
-      checkInTime: null,
-      attendenceDate: null,
-    };
+    if (id) {
+      this.userService.updateUser(createCheckoutDto.userId, {
+        isCheckedIn: false,
+      });
 
-    this.authService.updateSession(userId, payload);
+      let payload = {
+        isCheckedIn: false,
+        checkInTime: null,
+        attendenceDate: null,
+      };
 
-    return this.update(id['attendenceId'], {
-      checkOutTime: createCheckoutDto['checkOutTime'],
-    });
+      this.authService.updateSession(userId, payload);
+
+      return this.update(id['attendenceId'], {
+        checkOutTime: createCheckoutDto['checkOutTime'],
+      });
+    } else throw new NotFoundException('Please check in first');
   }
 
   getUserAttendence(id: string) {

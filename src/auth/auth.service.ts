@@ -205,12 +205,16 @@ export class AuthService {
   }
 
   async updateSession(userId: string, updateSessionDto: any) {
-    const resp = await this.prisma.session.update({
-      where: { userId },
-      data: { ...updateSessionDto, updatedAt: unixTimestamp() },
-    });
+    try {
+      const resp = await this.prisma.session.update({
+        where: { userId },
+        data: { ...updateSessionDto, updatedAt: unixTimestamp() },
+      });
 
-    return resp;
+      return resp;
+    } catch (exception) {
+      throw exception;
+    }
   }
 
   async logInToken(userId: string, userName: string): Promise<string> {

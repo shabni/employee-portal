@@ -34,7 +34,7 @@ export class AttendenceService {
       attendenceDate: attendence['attendenceDate'],
     };
 
-    this.authService.updateSession(userId, payload);
+    await this.authService.updateSession(userId, payload);
 
     return attendence;
   }
@@ -77,7 +77,7 @@ export class AttendenceService {
         attendenceDate: null,
       };
 
-      this.authService.updateSession(userId, payload);
+      await this.authService.updateSession(userId, payload);
 
       return this.update(id['attendenceId'], {
         checkOutTime: createCheckoutDto['checkOutTime'],

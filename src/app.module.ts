@@ -9,9 +9,10 @@ import { SettingsModule } from './settings/settings.module';
 import { ReportsModule } from './reports/reports.module';
 import { CustomSocketModule } from './custom-socket/custom-socket.module';
 import { TeamModule } from './team/team.module';
+import { TasksModule } from './tasks/tasks.module';
 
 @Module({
-  imports: [PrismaModule, UserModule, AttendenceModule, AuthModule, SettingsModule, ReportsModule, CustomSocketModule, TeamModule],
+  imports: [PrismaModule, UserModule, AttendenceModule, AuthModule, SettingsModule, ReportsModule, CustomSocketModule, TeamModule, TasksModule],
   controllers: [AppController],
   providers: [AppService],
 })

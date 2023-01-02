@@ -105,7 +105,7 @@ model Reports {
 
 model Tasks {
   taskId    String       @id
-  title     String
+  title     String       @unique
   updatedAt BigInt
   createdAt BigInt
   isDeleted Boolean      @default(false)

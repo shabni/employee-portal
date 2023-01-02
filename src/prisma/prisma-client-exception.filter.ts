@@ -8,39 +8,34 @@ export class PrismaClientExceptionFilter extends BaseExceptionFilter {
   catch(exception: Prisma.PrismaClientKnownRequestError, host: ArgumentsHost) {
     const context = host.switchToHttp();
     const response = context.getResponse<Response>();
-    const message = exception.message.replace(/\n/g, '');
+    let message = exception.message.replace(/\n/g, '');
+    let status = null;
 
     switch (exception.code) {
       case 'P2002': {
-        const status = HttpStatus.CONFLICT;
-        response.status(status).json({
-          statusCode: status,
-          message: message,
-        });
+        status = HttpStatus.CONFLICT;
         break;
       }
       case 'P2003': {
-        const status = HttpStatus.CONFLICT;
-
+        status = HttpStatus.CONFLICT;
         let columnName = exception.meta.field_name;
-        response.status(status).json({
-          statusCode: status,
-          message: `Must be valid ${columnName}`,
-        });
+        message = `Must be valid ${columnName}`;
         break;
       }
       case 'P2025': {
-        const status = HttpStatus.NOT_FOUND;
-        response.status(status).json({
-          statusCode: status,
-          message: `Record to update not found`,
-        });
+        status = HttpStatus.NOT_FOUND;
+        message = `Record to update not found`;
         break;
       }
       default:
-        // default 500 error code
-        super.catch(exception, host);
+        status = HttpStatus.INTERNAL_SERVER_ERROR;
+        message = 'Undocumented error with database';
         break;
     }
+
+    response.status(status).json({
+      statusCode: status,
+      message: message,
+    });
   }
 }

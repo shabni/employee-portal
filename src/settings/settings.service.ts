@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import {
   datesForCreate,
   MakeTimedIDUnique,
@@ -45,12 +45,17 @@ export class SettingsService {
     return this.makePermissions(roles);
   }
 
-  findOne(id: string) {
-    return this.prisma.roles.findFirst({
-      where: {
-        roleId: id,
-      },
-    });
+  async findOne(id: string) {
+    try {
+      const role = await this.prisma.roles.findFirstOrThrow({
+        where: {
+          roleId: id,
+        },
+      });
+      return role;
+    } catch (error) {
+      throw new NotFoundException('Invalid Role Id');
+    }
   }
 
   async updateRole(id: string, updateSettingDto: UpdateSettingDto) {

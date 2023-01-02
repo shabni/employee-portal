@@ -45,6 +45,7 @@ model Users {
 
   attendence Attendence[]
   Reports    Reports[]
+  tasks      TaskTracks[]
 
   teamLeadId  String?
   successor   Users?   @relation("TeamLead", fields: [teamLeadId], references: [userId])
@@ -53,15 +54,16 @@ model Users {
 }
 
 model Attendence {
-  attendenceId   String  @id
+  attendenceId   String       @id
   attendenceDate BigInt
   checkInTime    BigInt
   checkOutTime   BigInt?
-  user           Users   @relation(fields: [userId], references: [userId])
+  user           Users        @relation(fields: [userId], references: [userId])
   userId         String
   updatedAt      BigInt
   createdAt      BigInt
-  isDeleted      Boolean @default(false)
+  isDeleted      Boolean      @default(false)
+  tasks          TaskTracks[]
 }
 
 model Session {
@@ -99,4 +101,29 @@ model Reports {
   updatedAt   BigInt
   createdAt   BigInt
   isDeleted   Boolean @default(false)
+}
+
+model Tasks {
+  taskId    String       @id
+  title     String
+  updatedAt BigInt
+  createdAt BigInt
+  isDeleted Boolean      @default(false)
+  tasks     TaskTracks[]
+}
+
+model TaskTracks {
+  taskTrackId  String     @id
+  startDate    BigInt
+  endDate      BigInt
+  duration     BigInt
+  user         Users      @relation(fields: [userId], references: [userId])
+  userId       String
+  task         Tasks      @relation(fields: [taskId], references: [taskId])
+  taskId       String
+  attendence   Attendence @relation(fields: [attendenceId], references: [attendenceId])
+  attendenceId String
+  updatedAt    BigInt
+  createdAt    BigInt
+  isDeleted    Boolean    @default(false)
 }

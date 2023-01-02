@@ -117,6 +117,7 @@ model TaskTracks {
   startDate    BigInt
   endDate      BigInt
   duration     BigInt
+  isActive     Boolean    @default(false)
   user         Users      @relation(fields: [userId], references: [userId])
   userId       String
   task         Tasks      @relation(fields: [taskId], references: [taskId])

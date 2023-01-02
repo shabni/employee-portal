@@ -13,7 +13,7 @@ import { UpdateTaskDto } from './dto/update-task.dto';
 export class TasksService {
   constructor(private prisma: PrismaService) {}
 
-  create(createTaskDto: CreateTaskDto) {
+  createTask(createTaskDto: CreateTaskDto) {
     return this.prisma.tasks.create({
       data: {
         taskId: MakeTimedIDUnique(),

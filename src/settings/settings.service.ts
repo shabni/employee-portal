@@ -53,7 +53,7 @@ export class SettingsService {
         },
       });
       return role;
-    } catch (error) {
+    } catch (exception) {
       throw new NotFoundException('Invalid Role Id');
     }
   }

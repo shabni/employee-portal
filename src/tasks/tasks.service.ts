@@ -142,10 +142,13 @@ export class TasksService {
         AND: [{ taskTrackId: activeToggleDto.taskTrackId }, { isActive: true }],
       },
     });
-    this.updateTaskTrack(activeToggleDto.taskTrackId, {
-      isActive: false,
-      endDate: unixTimestamp(),
-      duration: unixTimestamp() - Number(startDate.startDate),
-    });
+
+    if (startDate) {
+      this.updateTaskTrack(activeToggleDto.taskTrackId, {
+        isActive: false,
+        endDate: unixTimestamp(),
+        duration: unixTimestamp() - Number(startDate.startDate),
+      });
+    } else throw new NotFoundException('Invalid Id for active task');
   }
 }

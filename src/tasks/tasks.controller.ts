@@ -8,7 +8,11 @@ import {
   Delete,
 } from '@nestjs/common';
 import { TasksService } from './tasks.service';
-import { CreateTaskDto, CreateTaskTrackDto } from './dto/create-task.dto';
+import {
+  StopTaskDto,
+  CreateTaskDto,
+  CreateTaskTrackDto,
+} from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { ApiTags } from '@nestjs/swagger';
 
@@ -45,5 +49,10 @@ export class TasksController {
   @Get('userActiveTask/:id')
   getUserActiveTask(@Param('id') id: string) {
     return this.tasksService.getUserActiveTask(id);
+  }
+
+  @Post('stopTask')
+  stopTask(@Body() stopTaskDto: StopTaskDto) {
+    return this.tasksService.stopTask(stopTaskDto);
   }
 }

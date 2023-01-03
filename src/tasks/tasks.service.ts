@@ -6,7 +6,11 @@ import {
   unixTimestamp,
 } from 'src/common/helper';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { CreateTaskDto, CreateTaskTrackDto } from './dto/create-task.dto';
+import {
+  StopTaskDto,
+  CreateTaskDto,
+  CreateTaskTrackDto,
+} from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 
 @Injectable()
@@ -82,7 +86,8 @@ export class TasksService {
       data: dataToinput,
     });
 
-    const task = await this.getTaskById(taskTrack.taskId);
+    let task = await this.getTaskById(taskTrack.taskId);
+    task['taskTrackId'] = taskTrack.taskTrackId;
     return task;
   }
 
@@ -98,6 +103,7 @@ export class TasksService {
   async getUserActiveTask(id: string) {
     let task = await this.prisma.taskTracks.findFirst({
       select: {
+        taskTrackId: true,
         taskId: true,
       },
       where: {
@@ -107,7 +113,9 @@ export class TasksService {
     });
 
     if (task) {
+      let taskTrackId = task.taskTrackId;
       task = await this.getTaskDetails(task.taskId);
+      task['taskTrackId'] = taskTrackId;
     }
 
     return task;
@@ -123,5 +131,21 @@ export class TasksService {
     } catch (exception) {
       return exception;
     }
+  }
+
+  async stopTask(activeToggleDto: StopTaskDto) {
+    const startDate = await this.prisma.taskTracks.findFirst({
+      select: {
+        startDate: true,
+      },
+      where: {
+        AND: [{ taskTrackId: activeToggleDto.taskTrackId }, { isActive: true }],
+      },
+    });
+    this.updateTaskTrack(activeToggleDto.taskTrackId, {
+      isActive: false,
+      endDate: unixTimestamp(),
+      duration: unixTimestamp() - Number(startDate.startDate),
+    });
   }
 }

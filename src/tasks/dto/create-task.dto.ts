@@ -19,3 +19,10 @@ export class CreateTaskTrackDto {
   @ApiProperty({ required: true })
   userId: string;
 }
+
+export class StopTaskDto {
+  @IsString()
+  @IsNotEmpty()
+  @ApiProperty({ required: true })
+  taskTrackId: string;
+}

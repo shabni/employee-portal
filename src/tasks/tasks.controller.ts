@@ -8,7 +8,7 @@ import {
   Delete,
 } from '@nestjs/common';
 import { TasksService } from './tasks.service';
-import { CreateTaskDto } from './dto/create-task.dto';
+import { CreateTaskDto, CreateTaskTrackDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { ApiTags } from '@nestjs/swagger';
 
@@ -35,5 +35,10 @@ export class TasksController {
   @Patch('updateTask/:id')
   updateTask(@Param('id') id: string, @Body() updateTaskDto: UpdateTaskDto) {
     return this.tasksService.updateTask(id, updateTaskDto);
+  }
+
+  @Post('createTaskTrack')
+  createTaskTrack(@Body() createTaskTrackDto: CreateTaskTrackDto) {
+    return this.tasksService.createTaskTrack(createTaskTrackDto);
   }
 }

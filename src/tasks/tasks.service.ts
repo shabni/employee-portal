@@ -6,7 +6,7 @@ import {
   unixTimestamp,
 } from 'src/common/helper';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { CreateTaskDto } from './dto/create-task.dto';
+import { CreateTaskDto, CreateTaskTrackDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 
 @Injectable()
@@ -46,5 +46,52 @@ export class TasksService {
       where: { taskId: id },
       data: { ...updateTaskDto, updatedAt: unixTimestamp() },
     });
+  }
+
+  async makeTasksInactive(id) {
+    const activeTaskIds = await this.prisma.taskTracks.findMany({
+      select: {
+        taskTrackId: true,
+        startDate: true,
+      },
+      where: { userId: id, isActive: true },
+    });
+
+    activeTaskIds.forEach((element) => {
+      this.updateTaskTrack(element.taskTrackId, {
+        isActive: false,
+        endDate: unixTimestamp(),
+        duration: unixTimestamp() - Number(element.startDate),
+      });
+    });
+  }
+
+  async createTaskTrack(createTaskTrackDto: CreateTaskTrackDto) {
+    this.makeTasksInactive(createTaskTrackDto.userId);
+
+    let dataToinput = {
+      taskTrackId: MakeTimedIDUnique(),
+      ...createTaskTrackDto,
+      ...datesForCreate(),
+      startDate: unixTimestamp(),
+      endDate: null,
+      duration: null,
+      isActive: true,
+    };
+    const taskTrack = await this.prisma.taskTracks.create({
+      data: dataToinput,
+    });
+
+    const task = await this.getTaskById(taskTrack.taskId);
+    return task;
+  }
+
+  async updateTaskTrack(id: string, updateTaskDto: any) {
+    const taskTrack = await this.prisma.taskTracks.update({
+      where: { taskTrackId: id },
+      data: { ...updateTaskDto, updatedAt: unixTimestamp() },
+    });
+
+    return taskTrack;
   }
 }

@@ -54,16 +54,15 @@ model Users {
 }
 
 model Attendence {
-  attendenceId   String       @id
+  attendenceId   String  @id
   attendenceDate BigInt
   checkInTime    BigInt
   checkOutTime   BigInt?
-  user           Users        @relation(fields: [userId], references: [userId])
+  user           Users   @relation(fields: [userId], references: [userId])
   userId         String
   updatedAt      BigInt
   createdAt      BigInt
-  isDeleted      Boolean      @default(false)
-  tasks          TaskTracks[]
+  isDeleted      Boolean @default(false)
 }
 
 model Session {
@@ -113,18 +112,16 @@ model Tasks {
 }
 
 model TaskTracks {
-  taskTrackId  String     @id
-  startDate    BigInt
-  endDate      BigInt
-  duration     BigInt
-  isActive     Boolean    @default(false)
-  user         Users      @relation(fields: [userId], references: [userId])
-  userId       String
-  task         Tasks      @relation(fields: [taskId], references: [taskId])
-  taskId       String
-  attendence   Attendence @relation(fields: [attendenceId], references: [attendenceId])
-  attendenceId String
-  updatedAt    BigInt
-  createdAt    BigInt
-  isDeleted    Boolean    @default(false)
+  taskTrackId String  @id
+  startDate   BigInt
+  endDate     BigInt?
+  duration    BigInt?
+  isActive    Boolean @default(false)
+  user        Users   @relation(fields: [userId], references: [userId])
+  userId      String
+  task        Tasks   @relation(fields: [taskId], references: [taskId])
+  taskId      String
+  updatedAt   BigInt
+  createdAt   BigInt
+  isDeleted   Boolean @default(false)
 }

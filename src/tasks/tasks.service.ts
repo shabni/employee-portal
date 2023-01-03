@@ -94,4 +94,34 @@ export class TasksService {
 
     return taskTrack;
   }
+
+  async getUserActiveTask(id: string) {
+    let task = await this.prisma.taskTracks.findFirst({
+      select: {
+        taskId: true,
+      },
+      where: {
+        userId: id,
+        isActive: true,
+      },
+    });
+
+    if (task) {
+      task = await this.getTaskDetails(task.taskId);
+    }
+
+    return task;
+  }
+
+  async getTaskDetails(id: string) {
+    try {
+      const task = await this.prisma.tasks.findFirst({
+        select: { taskId: true, title: true },
+        where: { taskId: id },
+      });
+      return task;
+    } catch (exception) {
+      return exception;
+    }
+  }
 }

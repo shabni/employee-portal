@@ -41,4 +41,9 @@ export class TasksController {
   createTaskTrack(@Body() createTaskTrackDto: CreateTaskTrackDto) {
     return this.tasksService.createTaskTrack(createTaskTrackDto);
   }
+
+  @Get('userActiveTask/:id')
+  getUserActiveTask(@Param('id') id: string) {
+    return this.tasksService.getUserActiveTask(id);
+  }
 }

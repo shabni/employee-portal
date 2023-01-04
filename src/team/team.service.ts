@@ -174,4 +174,114 @@ export class TeamService {
 
     return allUsers;
   }
+
+  async getTeamProgress(progressDate, userId) {
+    const { start, end } = this.makeStEndDate(progressDate);
+
+    let userIdList: any[] = [];
+    let whereCondition: any[] = [];
+    let whereConditionActive: any[] = [];
+
+    userIdList = await this.prisma.users.findMany({
+      select: { userId: true, fName: true, lName: true },
+      where: {
+        teamLeadId: userId,
+      },
+    });
+
+    let users = {};
+
+    userIdList.forEach((element) => {
+      users[element.userId] = element;
+
+      whereCondition.push({
+        AND: [
+          { userId: element.userId },
+          {
+            startDate: {
+              gt: start,
+            },
+          },
+          {
+            startDate: {
+              lt: end,
+            },
+          },
+        ],
+      });
+    });
+
+    userIdList.forEach((element) => {
+      whereConditionActive.push({
+        AND: [
+          { userId: element.userId },
+          {
+            startDate: {
+              gt: start,
+            },
+          },
+          {
+            startDate: {
+              lt: end,
+            },
+          },
+          {
+            isActive: true,
+          },
+        ],
+      });
+    });
+
+    let progress = await this.prisma.taskTracks.groupBy({
+      by: ['taskId', 'userId'],
+      where: {
+        OR: whereCondition,
+      },
+      _sum: {
+        duration: true,
+      },
+    });
+
+    let activeTasks = await this.prisma.taskTracks.findMany({
+      where: {
+        OR: whereConditionActive,
+      },
+    });
+
+    let tasksIds = [];
+
+    progress.forEach((progress) => {
+      activeTasks.forEach((task) => {
+        if (
+          progress.taskId === task.taskId &&
+          progress.userId === task.userId
+        ) {
+          progress['isActive'] = true;
+        }
+      });
+      progress['duration'] = progress._sum.duration;
+      progress['user'] = users[progress.userId];
+      tasksIds.push({ taskId: progress.taskId });
+      delete progress._sum;
+      delete progress.userId;
+    });
+
+    let allTasks = await this.prisma.tasks.findMany({
+      select: { taskId: true, title: true },
+      where: { OR: tasksIds },
+    });
+
+    let tasksHash = {};
+
+    allTasks.forEach((element) => {
+      tasksHash[element.taskId] = element;
+    });
+
+    progress.forEach((element) => {
+      element['task'] = tasksHash[element.taskId];
+      delete element.taskId;
+    });
+
+    return progress;
+  }
 }

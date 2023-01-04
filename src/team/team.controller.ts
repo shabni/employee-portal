@@ -27,4 +27,12 @@ export class TeamController {
   ) {
     return this.teamService.getTeamReports(reportDate, userId);
   }
+
+  @Get('getTeamProgress')
+  getTeamProgress(
+    @Query('userId') userId?: string,
+    @Query('progressDate') progressDate?: string,
+  ) {
+    return this.teamService.getTeamProgress(progressDate, userId);
+  }
 }

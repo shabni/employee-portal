@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { NotFoundException } from '@nestjs/common/exceptions';
+import { Prisma } from '@prisma/client';
 import {
   datesForCreate,
   MakeTimedIDUnique,
@@ -91,7 +92,10 @@ export class TasksService {
     return task;
   }
 
-  async updateTaskTrack(id: string, updateTaskDto: any) {
+  async updateTaskTrack(
+    id: string,
+    updateTaskDto: Prisma.TaskTracksUpdateInput,
+  ) {
     const taskTrack = await this.prisma.taskTracks.update({
       where: { taskTrackId: id },
       data: { ...updateTaskDto, updatedAt: unixTimestamp() },

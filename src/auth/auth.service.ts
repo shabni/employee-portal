@@ -44,24 +44,9 @@ export class AuthService {
 
           return session;
         } else {
-          let payload = {
-            userId: user.userId,
-            fName: user.fName,
-            lName: user.lName,
-            userName: user.userName,
-            password: user.password,
-            joiningDate: user.joiningDate,
-            phone: user.phone,
-            isLoggedIn: user.isLoggedIn,
-            isCheckedIn: user.isCheckedIn,
-            emailOffice: user.emailOffice,
-            address: user.address,
-            roleId: user.roleId,
-            profileImage: user.profileImage,
-            designation: user.designation,
-          };
+          const { teamLeadId, nic, ...data } = user;
 
-          let session = await this.createSession(payload);
+          let session = await this.createSession(data);
           session['profile']['token'] = token;
 
           return session;
@@ -108,25 +93,6 @@ export class AuthService {
   async getUserSession(userId) {
     let data = {};
     const session = await this.prisma.session.findFirst({
-      select: {
-        userId: true,
-        fName: true,
-        lName: true,
-        userName: true,
-        fatherName: true,
-        joiningDate: true,
-        isLoggedIn: true,
-        isCheckedIn: true,
-        roleId: true,
-        phone: true,
-        emailOffice: true,
-        address: true,
-        attendenceDate: true,
-        checkInTime: true,
-        checkOutTime: true,
-        profileImage: true,
-        designation: true,
-      },
       where: {
         userId,
       },
@@ -142,8 +108,8 @@ export class AuthService {
         data['profile']['checkInTime'] = x['checkInTime'];
       }
       let permissions = await this.findRole(data['profile']['roleId']);
-      if (permissions['permissions'])
-        data['permissions'] = this.makePermissions(permissions['permissions']);
+      if (permissions.permissions)
+        data['permissions'] = this.makePermissions(permissions.permissions);
     }
 
     return data;

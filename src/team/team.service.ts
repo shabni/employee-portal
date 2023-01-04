@@ -183,10 +183,12 @@ export class TeamService {
     let whereConditionActive: any[] = [];
 
     userIdList = await this.prisma.users.findMany({
-      select: { userId: true, fName: true, lName: true },
-      where: {
-        teamLeadId: userId,
+      select: {
+        userId: true,
+        fName: true,
+        lName: true,
       },
+      where: { teamLeadId: userId },
     });
 
     let users = {};
@@ -197,16 +199,8 @@ export class TeamService {
       whereCondition.push({
         AND: [
           { userId: element.userId },
-          {
-            startDate: {
-              gt: start,
-            },
-          },
-          {
-            startDate: {
-              lt: end,
-            },
-          },
+          { startDate: { gt: start } },
+          { startDate: { lt: end } },
         ],
       });
     });
@@ -215,31 +209,17 @@ export class TeamService {
       whereConditionActive.push({
         AND: [
           { userId: element.userId },
-          {
-            startDate: {
-              gt: start,
-            },
-          },
-          {
-            startDate: {
-              lt: end,
-            },
-          },
-          {
-            isActive: true,
-          },
+          { startDate: { gt: start } },
+          { startDate: { lt: end } },
+          { isActive: true },
         ],
       });
     });
 
     let progress = await this.prisma.taskTracks.groupBy({
       by: ['taskId', 'userId'],
-      where: {
-        OR: whereCondition,
-      },
-      _sum: {
-        duration: true,
-      },
+      where: { OR: whereCondition },
+      _sum: { duration: true },
     });
 
     let activeTasks = await this.prisma.taskTracks.findMany({
@@ -250,6 +230,21 @@ export class TeamService {
 
     let tasksIds = [];
 
+    // const ret = progress.map((pr) => {
+    //   const task = activeTasks.find(
+    //     (task) =>
+    //       task.isActive &&
+    //       pr.taskId === task.taskId &&
+    //       pr.userId === task.userId,
+    //   );
+
+    //   return {
+    //     ...pr,
+    //     isActive: task?.isActive,
+    //   };
+    // });
+
+    // console.log(activeTasks);
     progress.forEach((progress) => {
       activeTasks.forEach((task) => {
         if (
@@ -282,6 +277,7 @@ export class TeamService {
       delete element.taskId;
     });
 
+    // console.log(progress, ret);
     return progress;
   }
 }

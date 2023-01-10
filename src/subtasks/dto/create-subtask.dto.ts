@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsBoolean, IsString, IsOptional } from 'class-validator';
 
-export class CreateSubtaskDto {
+export class BulkSubtaskDto {
   @IsString()
   @IsNotEmpty()
   @ApiProperty({ required: true })
@@ -11,4 +11,9 @@ export class CreateSubtaskDto {
   @IsNotEmpty()
   @ApiProperty({ required: true })
   taskId: string;
+
+  @IsString()
+  @IsOptional()
+  @ApiProperty({ required: true })
+  subTaskId: string;
 }

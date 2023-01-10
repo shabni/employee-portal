@@ -8,7 +8,7 @@ import {
   Delete,
 } from '@nestjs/common';
 import { SubtasksService } from './subtasks.service';
-import { CreateSubtaskDto } from './dto/create-subtask.dto';
+import { BulkSubtaskDto } from './dto/create-subtask.dto';
 import { UpdateSubtaskDto } from './dto/update-subtask.dto';
 import { ApiTags } from '@nestjs/swagger';
 
@@ -18,8 +18,8 @@ export class SubtasksController {
   constructor(private readonly subtasksService: SubtasksService) {}
 
   @Post('createSubTasks')
-  create(@Body() createSubtaskDto: CreateSubtaskDto[]) {
-    return this.subtasksService.createSubTasks(createSubtaskDto);
+  create(@Body() bulkSubtaskDto: BulkSubtaskDto[]) {
+    return this.subtasksService.createSubTasks(bulkSubtaskDto);
   }
 
   @Get('getAllSubTasks/:id')

@@ -32,10 +32,13 @@ export class SubtasksController {
   //   return this.subtasksService.findOne(+id);
   // }
 
-  // @Patch(':id')
-  // update(@Param('id') id: string, @Body() updateSubtaskDto: UpdateSubtaskDto) {
-  //   return this.subtasksService.update(+id, updateSubtaskDto);
-  // }
+  @Patch('updateSubTask/:id')
+  updateSubtask(
+    @Param('id') id: string,
+    @Body() updateSubtaskDto: UpdateSubtaskDto,
+  ) {
+    return this.subtasksService.updateSubtask(id, updateSubtaskDto);
+  }
 
   // @Delete(':id')
   // remove(@Param('id') id: string) {

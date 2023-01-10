@@ -1,5 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { datesForCreate, MakeTimedIDUnique } from 'src/common/helper';
+import {
+  datesForCreate,
+  MakeTimedIDUnique,
+  unixTimestamp,
+} from 'src/common/helper';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateSubtaskDto } from './dto/create-subtask.dto';
 import { UpdateSubtaskDto } from './dto/update-subtask.dto';
@@ -25,6 +29,7 @@ export class SubtasksService {
       select: { subTaskId: true, title: true, taskId: true },
       where: {
         taskId: id,
+        isDeleted: false,
       },
     });
 
@@ -35,9 +40,12 @@ export class SubtasksService {
   //   return `This action returns a #${id} subtask`;
   // }
 
-  // update(id: number, updateSubtaskDto: UpdateSubtaskDto) {
-  //   return `This action updates a #${id} subtask`;
-  // }
+  updateSubtask(id: string, updateSubtaskDto: UpdateSubtaskDto) {
+    return this.prisma.subTasks.update({
+      where: { subTaskId: id },
+      data: { ...updateSubtaskDto, updatedAt: unixTimestamp() },
+    });
+  }
 
   // remove(id: number) {
   //   return `This action removes a #${id} subtask`;

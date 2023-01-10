@@ -10,17 +10,19 @@ export class SubtasksService {
   async createSubTasks(createSubtaskDto: CreateSubtaskDto[]) {
     await this.prisma.subTasks.createMany({
       data: createSubtaskDto.map((subtask) => {
-        return {
-          subTaskId: MakeTimedIDUnique(),
-          ...subtask,
-          ...datesForCreate(),
-        };
+        if (!subtask['subTaskId'])
+          return {
+            subTaskId: MakeTimedIDUnique(),
+            ...subtask,
+            ...datesForCreate(),
+          };
       }),
     });
   }
 
   async getAllSubTasks(id: string) {
     const subTasks = await this.prisma.subTasks.findMany({
+      select: { subTaskId: true, title: true, taskId: true },
       where: {
         taskId: id,
       },

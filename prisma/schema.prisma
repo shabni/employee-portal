@@ -109,6 +109,7 @@ model Tasks {
   createdAt BigInt
   isDeleted Boolean      @default(false)
   tasks     TaskTracks[]
+  subTasks  SubTasks[]
 }
 
 model TaskTracks {
@@ -124,4 +125,14 @@ model TaskTracks {
   updatedAt   BigInt
   createdAt   BigInt
   isDeleted   Boolean @default(false)
+}
+
+model SubTasks {
+  subTaskId String  @id
+  title     String  @unique
+  updatedAt BigInt
+  createdAt BigInt
+  isDeleted Boolean @default(false)
+  task      Tasks   @relation(fields: [taskId], references: [taskId])
+  taskId    String
 }

@@ -11,12 +11,10 @@ import {
   unixTimestamp,
 } from 'src/common/helper';
 import { PrismaService } from 'src/prisma/prisma.service';
-import {
-  LogInDto,
-  logInUserDto,
-  logOutUserDto,
-  createSessionDto,
-} from './dto/create-auth.dto';
+import { LogOutUserDto } from './dto/create-auth.dto';
+import { CreateSessionDto } from './dto/create-session.dto';
+import { LogInDto } from './dto/login.dto';
+import { UpdatelogedInUserDto } from './dto/update-logedin-user.dto';
 
 @Injectable()
 export class AuthService {
@@ -58,7 +56,7 @@ export class AuthService {
     } else throw new UnauthorizedException('User does not exist!');
   }
 
-  async LogOut(logOutUserDto: logOutUserDto) {
+  async LogOut(logOutUserDto: LogOutUserDto) {
     await this.updateUser(logOutUserDto.userId, { isLoggedIn: false });
     await this.removeSession(logOutUserDto.userId);
   }
@@ -72,10 +70,10 @@ export class AuthService {
     return removed;
   }
 
-  async updateUser(id: string, logInUserDto: logInUserDto) {
+  async updateUser(id: string, updatelogedInUserDto: UpdatelogedInUserDto) {
     const resp = await this.prisma.users.update({
       where: { userId: id },
-      data: { ...logInUserDto, updatedAt: unixTimestamp() },
+      data: { ...updatelogedInUserDto, updatedAt: unixTimestamp() },
     });
 
     return resp;
@@ -152,7 +150,7 @@ export class AuthService {
     return data;
   }
 
-  async createSession(createSessionDto: createSessionDto) {
+  async createSession(createSessionDto: CreateSessionDto) {
     let data = {};
 
     let session = await this.prisma.session.create({

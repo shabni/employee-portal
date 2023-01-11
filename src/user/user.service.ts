@@ -56,11 +56,11 @@ export class UserService {
     return data;
   }
 
-  async updateUser(id: string, logInUserDto: any) {
+  async updateUser(id: string, updatelogedInUserDto: any) {
     try {
       const resp = await this.prisma.users.update({
         where: { userId: id },
-        data: { ...logInUserDto, updatedAt: unixTimestamp() },
+        data: { ...updatelogedInUserDto, updatedAt: unixTimestamp() },
       });
       return resp;
     } catch (exception) {

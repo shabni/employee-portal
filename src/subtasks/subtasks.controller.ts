@@ -27,11 +27,6 @@ export class SubtasksController {
     return this.subtasksService.getAllSubTasks(id);
   }
 
-  // @Get(':id')
-  // findOne(@Param('id') id: string) {
-  //   return this.subtasksService.findOne(+id);
-  // }
-
   @Patch('updateSubTask/:id')
   updateSubtask(
     @Param('id') id: string,
@@ -42,6 +37,6 @@ export class SubtasksController {
 
   // @Delete(':id')
   // remove(@Param('id') id: string) {
-  //   return this.subtasksService.remove(+id);
+  //   return this.subtasksService.remove(id);
   // }
 }

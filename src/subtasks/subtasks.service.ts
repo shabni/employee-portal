@@ -42,10 +42,6 @@ export class SubtasksService {
     return subTasks;
   }
 
-  // findOne(id: number) {
-  //   return `This action returns a #${id} subtask`;
-  // }
-
   async updateSubtask(id: string, updateSubtaskDto: UpdateSubtaskDto) {
     const updated = await this.prisma.subTasks.update({
       where: { subTaskId: id },
@@ -53,7 +49,7 @@ export class SubtasksService {
     });
   }
 
-  // remove(id: number) {
+  // remove(id: string) {
   //   return `This action removes a #${id} subtask`;
   // }
 }

@@ -7,22 +7,3 @@ export class CreateTaskDto {
   @ApiProperty({ required: true })
   title: string;
 }
-
-export class CreateTaskTrackDto {
-  @IsString()
-  @IsNotEmpty()
-  @ApiProperty({ required: true })
-  taskId: string;
-
-  @IsString()
-  @IsNotEmpty()
-  @ApiProperty({ required: true })
-  userId: string;
-}
-
-export class StopTaskDto {
-  @IsString()
-  @IsNotEmpty()
-  @ApiProperty({ required: true })
-  taskTrackId: string;
-}

@@ -8,13 +8,11 @@ import {
   Delete,
 } from '@nestjs/common';
 import { TasksService } from './tasks.service';
-import {
-  StopTaskDto,
-  CreateTaskDto,
-  CreateTaskTrackDto,
-} from './dto/create-task.dto';
+import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { ApiTags } from '@nestjs/swagger';
+import { StopTaskDto } from './dto/stop-task.dto';
+import { CreateTaskTrackDto } from './dto/create-task-track.dto';
 
 @Controller('api/tasks')
 @ApiTags('Tasks')

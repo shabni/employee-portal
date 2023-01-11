@@ -7,11 +7,9 @@ import {
   unixTimestamp,
 } from 'src/common/helper';
 import { PrismaService } from 'src/prisma/prisma.service';
-import {
-  StopTaskDto,
-  CreateTaskDto,
-  CreateTaskTrackDto,
-} from './dto/create-task.dto';
+import { CreateTaskTrackDto } from './dto/create-task-track.dto';
+import { CreateTaskDto } from './dto/create-task.dto';
+import { StopTaskDto } from './dto/stop-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 
 @Injectable()

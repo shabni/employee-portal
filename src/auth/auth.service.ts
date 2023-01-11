@@ -106,9 +106,9 @@ export class AuthService {
       data.profile = session;
 
       if (session.isCheckedIn) {
-        let x = await this.findUserAttendenceTime(session.userId);
-        data.profile.attendenceDate = x.attendenceDate;
-        data.profile.checkInTime = x.checkInTime;
+        let userAttendence = await this.findUserAttendenceTime(session.userId);
+        data.profile.attendenceDate = userAttendence.attendenceDate;
+        data.profile.checkInTime = userAttendence.checkInTime;
       }
       let permissions = await this.findRole(data.profile.roleId);
       if (permissions.permissions)
@@ -172,10 +172,12 @@ export class AuthService {
       data.permissions = this.makePermissions(permissions.permissions);
 
     if (data.profile.isCheckedIn) {
-      let x = await this.findUserAttendenceTime(data.profile.userId);
-      data.profile.isCheckedIn = x['isCheckedIn'];
-      data.profile.attendenceDate = x.attendenceDate;
-      data.profile.checkInTime = x.checkInTime;
+      let userAttendence = await this.findUserAttendenceTime(
+        data.profile.userId,
+      );
+      data.profile.isCheckedIn = userAttendence['isCheckedIn'];
+      data.profile.attendenceDate = userAttendence.attendenceDate;
+      data.profile.checkInTime = userAttendence.checkInTime;
     }
 
     return data;

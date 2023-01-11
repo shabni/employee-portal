@@ -19,7 +19,7 @@ export class ReportsController {
     return this.reportsService.getUserReport(id);
   }
 
-  @Patch(':updateReport/:id')
+  @Patch('updateReport/:id')
   updateReport(
     @Param('id') id: string,
     @Body() updateReportDto: UpdateReportDto,

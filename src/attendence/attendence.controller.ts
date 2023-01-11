@@ -18,12 +18,12 @@ import { createCheckoutDto } from './dto/checkout-attendence.dto';
 export class AttendenceController {
   constructor(private readonly attendenceService: AttendenceService) {}
 
-  @Post('chechIn')
+  @Post('checkIn')
   checkIn(@Body() createAttendenceDto: CreateAttendenceDto) {
     return this.attendenceService.checkIn(createAttendenceDto);
   }
 
-  @Post('chechOut')
+  @Post('checkOut')
   createOut(@Body() createCheckoutDto: createCheckoutDto) {
     return this.attendenceService.createOut(createCheckoutDto);
   }
@@ -39,10 +39,5 @@ export class AttendenceController {
     @Body() updateAttendenceDto: UpdateAttendenceDto,
   ) {
     return this.attendenceService.update(id, updateAttendenceDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.attendenceService.remove(+id);
   }
 }

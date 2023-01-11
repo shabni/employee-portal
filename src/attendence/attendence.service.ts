@@ -24,14 +24,14 @@ export class AttendenceService {
       isCheckedIn: true,
     });
 
-    let userId = createAttendenceDto.userId;
+    const userId = createAttendenceDto.userId;
 
-    let attendence = await this.createAttendence(createAttendenceDto);
+    const attendence = await this.createAttendence(createAttendenceDto);
 
     let payload = {
       isCheckedIn: true,
-      checkInTime: attendence['checkInTime'],
-      attendenceDate: attendence['attendenceDate'],
+      checkInTime: attendence.checkInTime,
+      attendenceDate: attendence.attendenceDate,
     };
 
     await this.authService.updateSession(userId, payload);
@@ -40,7 +40,7 @@ export class AttendenceService {
   }
 
   async createAttendence(createAttendenceDto: CreateAttendenceDto) {
-    let attendence = await this.prisma.attendence.create({
+    const attendence = await this.prisma.attendence.create({
       data: {
         attendenceId: MakeTimedIDUnique(),
         ...createAttendenceDto,
@@ -52,9 +52,9 @@ export class AttendenceService {
   }
 
   async createOut(createCheckoutDto: createCheckoutDto) {
-    let userId = createCheckoutDto.userId;
+    const userId = createCheckoutDto.userId;
 
-    let id = await this.prisma.attendence.findFirst({
+    const id = await this.prisma.attendence.findFirst({
       select: { attendenceId: true },
       where: {
         AND: [
@@ -79,8 +79,8 @@ export class AttendenceService {
 
       await this.authService.updateSession(userId, payload);
 
-      return this.update(id['attendenceId'], {
-        checkOutTime: createCheckoutDto['checkOutTime'],
+      return this.update(id.attendenceId, {
+        checkOutTime: createCheckoutDto.checkOutTime,
       });
     } else throw new NotFoundException('Please check in first');
   }
@@ -113,9 +113,5 @@ export class AttendenceService {
     });
 
     return resp;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} attendence`;
   }
 }

@@ -17,7 +17,7 @@ export class TeamController {
     @Query('userId') userId?: string,
     @Query('attendenceDate') attendenceDate?: string,
   ) {
-    return this.teamService.getTeamAttendence(attendenceDate, userId);
+    return this.teamService.getTeamAttendence(+attendenceDate, userId);
   }
 
   @Get('getTeamReports')

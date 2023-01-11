@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { CreateTeamDto } from './dto/create-team.dto';
+import { UserIdsDto } from './dto/user-ids.dto';
 import { UpdateTeamDto } from './dto/update-team.dto';
 import * as dateFns from 'date-fns';
+import { WhereCondition } from './dto/where-condition.dto';
 
 @Injectable()
 export class TeamService {
@@ -10,23 +11,6 @@ export class TeamService {
 
   getTeamMembers(id: string) {
     return this.prisma.users.findMany({
-      select: {
-        userId: true,
-        fName: true,
-        lName: true,
-        fatherName: true,
-        joiningDate: true,
-        userName: true,
-        password: true,
-        nic: true,
-        emailOffice: true,
-        address: true,
-        phone: true,
-        roleId: true,
-        teamLeadId: true,
-        profileImage: true,
-        designation: true,
-      },
       where: {
         teamLeadId: id,
       },
@@ -34,31 +18,29 @@ export class TeamService {
   }
 
   makeUserAttendenceData(allUsers, attendence) {
-    let attendenceObject = {};
+    let attendenceHash = {};
 
     attendence.forEach((element) => {
-      attendenceObject[element.userId] = element;
+      attendenceHash[element.userId] = element;
     });
 
     allUsers.forEach((element) => {
-      if (attendenceObject.hasOwnProperty(element.userId)) {
-        element['attendenceDate'] =
-          attendenceObject[element.userId]['attendenceDate'];
-        element['checkInTime'] =
-          attendenceObject[element.userId]['checkInTime'];
-        element['checkOutTime'] =
-          attendenceObject[element.userId]['checkOutTime'];
+      if (attendenceHash.hasOwnProperty(element.userId)) {
+        element.attendenceDate =
+          attendenceHash[element.userId]['attendenceDate'];
+        element.checkInTime = attendenceHash[element.userId]['checkInTime'];
+        element.checkOutTime = attendenceHash[element.userId]['checkOutTime'];
       } else {
-        element['attendenceDate'] = null;
-        element['checkInTime'] = null;
-        element['checkOutTime'] = null;
+        element.attendenceDate = null;
+        element.checkInTime = null;
+        element.checkOutTime = null;
       }
     });
 
     return allUsers;
   }
 
-  makeStEndDate(attendenceDate) {
+  makeStEndDate(attendenceDate: number) {
     const dateFormat = new Date(attendenceDate * 1000);
     const start = dateFns.startOfDay(dateFormat);
     const end = dateFns.endOfDay(dateFormat);
@@ -69,11 +51,11 @@ export class TeamService {
     };
   }
 
-  async getTeamAttendence(attendenceDate, userId) {
+  async getTeamAttendence(attendenceDate: number, userId: string) {
     const { start, end } = this.makeStEndDate(attendenceDate);
 
-    let userIdList: any[] = [];
-    let whereCondition: any[] = [];
+    let userIdList: UserIdsDto[] = [];
+    let whereCondition: WhereCondition[] = [];
 
     userIdList = await this.prisma.users.findMany({
       select: { userId: true, fName: true, lName: true },
@@ -88,16 +70,8 @@ export class TeamService {
       whereCondition.push({
         AND: [
           { userId: element.userId },
-          {
-            attendenceDate: {
-              gt: start,
-            },
-          },
-          {
-            attendenceDate: {
-              lt: end,
-            },
-          },
+          { attendenceDate: { gt: start } },
+          { attendenceDate: { lt: end } },
         ],
       });
     });
@@ -114,19 +88,19 @@ export class TeamService {
   }
 
   makeUserReportData(allUsers, reports) {
-    let reportsObject = {};
+    let reportsHash = {};
 
     reports.forEach((element) => {
-      reportsObject[element.userId] = element;
+      reportsHash[element.userId] = element;
     });
 
     allUsers.forEach((element) => {
-      if (reportsObject.hasOwnProperty(element.userId)) {
-        element['reportDate'] = reportsObject[element.userId]['reportDate'];
-        element['description'] = reportsObject[element.userId]['description'];
+      if (reportsHash.hasOwnProperty(element.userId)) {
+        element.reportDate = reportsHash[element.userId]['reportDate'];
+        element.description = reportsHash[element.userId]['description'];
       } else {
-        element['reportDate'] = null;
-        element['description'] = null;
+        element.reportDate = null;
+        element.description = null;
       }
     });
 
@@ -136,30 +110,20 @@ export class TeamService {
   async getTeamReports(attendenceDate, userId) {
     const { start, end } = this.makeStEndDate(attendenceDate);
 
-    let userIdList: any[] = [];
-    let whereCondition: any[] = [];
+    let userIdList: UserIdsDto[] = [];
+    let whereCondition: WhereCondition[] = [];
 
     userIdList = await this.prisma.users.findMany({
       select: { userId: true, fName: true, lName: true },
-      where: {
-        teamLeadId: userId,
-      },
+      where: { teamLeadId: userId },
     });
 
     userIdList.forEach((element) => {
       whereCondition.push({
         AND: [
           { userId: element.userId },
-          {
-            reportDate: {
-              gt: start - 1,
-            },
-          },
-          {
-            reportDate: {
-              lt: end,
-            },
-          },
+          { reportDate: { gt: start - 1 } },
+          { reportDate: { lt: end } },
         ],
       });
     });
@@ -178,16 +142,12 @@ export class TeamService {
   async getTeamProgress(progressDate, userId) {
     const { start, end } = this.makeStEndDate(progressDate);
 
-    let userIdList: any[] = [];
-    let whereCondition: any[] = [];
-    let whereConditionActive: any[] = [];
+    let userIdList: UserIdsDto[] = [];
+    let whereCondition: WhereCondition[] = [];
+    let whereConditionActive: WhereCondition[] = [];
 
     userIdList = await this.prisma.users.findMany({
-      select: {
-        userId: true,
-        fName: true,
-        lName: true,
-      },
+      select: { userId: true, fName: true, lName: true },
       where: { teamLeadId: userId },
     });
 
@@ -230,35 +190,23 @@ export class TeamService {
 
     let tasksIds = [];
 
-    // const ret = progress.map((pr) => {
-    //   const task = activeTasks.find(
-    //     (task) =>
-    //       task.isActive &&
-    //       pr.taskId === task.taskId &&
-    //       pr.userId === task.userId,
-    //   );
-
-    //   return {
-    //     ...pr,
-    //     isActive: task?.isActive,
-    //   };
-    // });
-
-    // console.log(activeTasks);
-    progress.forEach((progress) => {
-      activeTasks.forEach((task) => {
-        if (
+    const projecProgress = progress.map((progress) => {
+      const task = activeTasks.find(
+        (task) =>
+          task.isActive &&
           progress.taskId === task.taskId &&
-          progress.userId === task.userId
-        ) {
-          progress['isActive'] = true;
-        }
-      });
+          progress.userId === task.userId,
+      );
       progress['duration'] = progress._sum.duration;
       progress['user'] = users[progress.userId];
       tasksIds.push({ taskId: progress.taskId });
       delete progress._sum;
       delete progress.userId;
+
+      return {
+        ...progress,
+        isActive: task?.isActive,
+      };
     });
 
     let allTasks = await this.prisma.tasks.findMany({
@@ -272,12 +220,11 @@ export class TeamService {
       tasksHash[element.taskId] = element;
     });
 
-    progress.forEach((element) => {
+    projecProgress.forEach((element) => {
       element['task'] = tasksHash[element.taskId];
       delete element.taskId;
     });
 
-    // console.log(progress, ret);
-    return progress;
+    return projecProgress;
   }
 }

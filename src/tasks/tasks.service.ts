@@ -9,6 +9,7 @@ import {
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateTaskTrackDto } from './dto/create-task-track.dto';
 import { CreateTaskDto } from './dto/create-task.dto';
+import { ResponseTaskTrackDto } from './dto/response-task-track.dto';
 import { StopTaskDto } from './dto/stop-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 
@@ -51,7 +52,7 @@ export class TasksService {
     });
   }
 
-  async makeTasksInactive(id) {
+  async makeTasksInactive(id: string) {
     const activeTaskIds = await this.prisma.taskTracks.findMany({
       select: {
         taskTrackId: true,
@@ -72,7 +73,7 @@ export class TasksService {
   async createTaskTrack(createTaskTrackDto: CreateTaskTrackDto) {
     this.makeTasksInactive(createTaskTrackDto.userId);
 
-    let dataToinput = {
+    let dataToinput: Prisma.TaskTracksUncheckedCreateInput = {
       taskTrackId: MakeTimedIDUnique(),
       ...createTaskTrackDto,
       ...datesForCreate(),
@@ -85,9 +86,12 @@ export class TasksService {
       data: dataToinput,
     });
 
-    let task = await this.getTaskById(taskTrack.taskId);
-    task['taskTrackId'] = taskTrack.taskTrackId;
-    return task;
+    const task = await this.getTaskById(taskTrack.taskId);
+
+    let responseTaskTrack: ResponseTaskTrackDto = {};
+    responseTaskTrack = task;
+    responseTaskTrack.taskTrackId = taskTrack.taskTrackId;
+    return responseTaskTrack;
   }
 
   async updateTaskTrack(
@@ -103,7 +107,7 @@ export class TasksService {
   }
 
   async getUserActiveTask(id: string) {
-    let task = await this.prisma.taskTracks.findFirst({
+    const task = await this.prisma.taskTracks.findFirst({
       select: {
         taskTrackId: true,
         taskId: true,
@@ -114,25 +118,23 @@ export class TasksService {
       },
     });
 
+    let responseTask: ResponseTaskTrackDto = {};
+
     if (task) {
       let taskTrackId = task.taskTrackId;
-      task = await this.getTaskDetails(task.taskId);
-      task['taskTrackId'] = taskTrackId;
+      responseTask = await this.getTaskDetails(task.taskId);
+      responseTask.taskTrackId = taskTrackId;
     }
 
-    return task;
+    return responseTask;
   }
 
   async getTaskDetails(id: string) {
-    try {
-      const task = await this.prisma.tasks.findFirst({
-        select: { taskId: true, title: true },
-        where: { taskId: id },
-      });
-      return task;
-    } catch (exception) {
-      return exception;
-    }
+    const task = await this.prisma.tasks.findFirst({
+      select: { taskId: true, title: true },
+      where: { taskId: id },
+    });
+    return task;
   }
 
   async stopTask(activeToggleDto: StopTaskDto) {

@@ -5,8 +5,8 @@ import {
   unixTimestamp,
 } from 'src/common/helper';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { CreateRoleDto, CreateSettingDto } from './dto/create-setting.dto';
-import { UpdateSettingDto } from './dto/update-setting.dto';
+import { CreateRoleDto } from './dto/create-role.dto';
+import { UpdateSettingDto } from './dto/role-setting.dto';
 
 @Injectable()
 export class SettingsService {
@@ -24,8 +24,8 @@ export class SettingsService {
 
   makePermissions(roles) {
     roles.forEach((element) => {
-      if (element['permissions']) {
-        element['permissions'] = element['permissions'].split(',');
+      if (element.permission) {
+        element.permission = element.permission.split(',');
       }
     });
 

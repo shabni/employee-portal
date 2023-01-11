@@ -10,8 +10,8 @@ import {
   Res,
 } from '@nestjs/common';
 import { SettingsService } from './settings.service';
-import { CreateRoleDto, CreateSettingDto } from './dto/create-setting.dto';
-import { UpdateSettingDto } from './dto/update-setting.dto';
+import { CreateRoleDto } from './dto/create-role.dto';
+import { UpdateSettingDto } from './dto/role-setting.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 import * as path from 'path';

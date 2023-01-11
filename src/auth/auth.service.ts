@@ -13,6 +13,7 @@ import {
 import { PrismaService } from 'src/prisma/prisma.service';
 import { LogOutUserDto } from './dto/create-auth.dto';
 import { CreateSessionDto } from './dto/create-session.dto';
+import { LogInResponseDto } from './dto/login-response.dto';
 import { LogInDto } from './dto/login.dto';
 import { UpdatelogedInUserDto } from './dto/update-logedin-user.dto';
 
@@ -35,19 +36,23 @@ export class AuthService {
         const token = await this.logInToken(user.userId, user.userName);
         this.updateUser(user.userId, { isLoggedIn: true });
 
-        let session = await this.getUserSession(user.userId);
+        const session = await this.getUserSession(user.userId);
+
+        let sessionResponse: LogInResponseDto = {};
 
         if (Object.keys(session).length > 0) {
-          session['profile']['token'] = token;
+          sessionResponse = session;
+          sessionResponse.profile.token = token;
 
-          return session;
+          return sessionResponse;
         } else {
           const { teamLeadId, nic, ...data } = user;
 
           let session = await this.createSession(data);
-          session['profile']['token'] = token;
+          sessionResponse = session;
+          sessionResponse.profile.token = token;
 
-          return session;
+          return sessionResponse;
         }
       } else
         throw new UnauthorizedException(
@@ -89,7 +94,7 @@ export class AuthService {
   }
 
   async getUserSession(userId) {
-    let data = {};
+    let data: LogInResponseDto = {};
     const session = await this.prisma.session.findFirst({
       where: {
         userId,
@@ -97,17 +102,17 @@ export class AuthService {
     });
 
     if (session) {
-      data['session'] = true;
-      data['profile'] = session;
+      data.session = true;
+      data.profile = session;
 
       if (session.isCheckedIn) {
         let x = await this.findUserAttendenceTime(session.userId);
-        data['profile']['attendenceDate'] = x['attendenceDate'];
-        data['profile']['checkInTime'] = x['checkInTime'];
+        data.profile.attendenceDate = x.attendenceDate;
+        data.profile.checkInTime = x.checkInTime;
       }
-      let permissions = await this.findRole(data['profile']['roleId']);
+      let permissions = await this.findRole(data.profile.roleId);
       if (permissions.permissions)
-        data['permissions'] = this.makePermissions(permissions.permissions);
+        data.permissions = this.makePermissions(permissions.permissions);
     }
 
     return data;
@@ -151,7 +156,7 @@ export class AuthService {
   }
 
   async createSession(createSessionDto: CreateSessionDto) {
-    let data = {};
+    let data: LogInResponseDto = {};
 
     let session = await this.prisma.session.create({
       data: {
@@ -161,16 +166,16 @@ export class AuthService {
       },
     });
 
-    data['profile'] = session;
-    let permissions = await this.findRole(data['profile']['roleId']);
-    if (permissions['permissions'])
-      data['permissions'] = this.makePermissions(permissions['permissions']);
+    data.profile = session;
+    let permissions = await this.findRole(data.profile.roleId);
+    if (permissions.permissions)
+      data.permissions = this.makePermissions(permissions.permissions);
 
-    if (data['profile'].isCheckedIn) {
-      let x = await this.findUserAttendenceTime(data['profile'].userId);
-      data['profile']['isCheckedIn'] = x['isCheckedIn'];
-      data['profile']['attendenceDate'] = x['attendenceDate'];
-      data['profile']['checkInTime'] = x['checkInTime'];
+    if (data.profile.isCheckedIn) {
+      let x = await this.findUserAttendenceTime(data.profile.userId);
+      data.profile.isCheckedIn = x['isCheckedIn'];
+      data.profile.attendenceDate = x.attendenceDate;
+      data.profile.checkInTime = x.checkInTime;
     }
 
     return data;

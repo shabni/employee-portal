@@ -1,18 +1,29 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
-  IsNumber,
   IsOptional,
   IsString,
   IsNotEmpty,
-  IsEmail,
+  IsNumber,
   IsBoolean,
 } from 'class-validator';
 
-export class CreateSessionDto {
+export class LogInResponseDto {
+  @IsOptional()
+  @ApiProperty({ required: true })
+  profile?: CreatedSessionDto;
+
+  @ApiProperty({ required: true })
+  permissions?: any;
+
+  @ApiProperty({ required: true })
+  session?: boolean;
+}
+
+export class CreatedSessionDto {
   @IsString()
   @IsNotEmpty()
   @ApiProperty({ required: true })
-  userId: string;
+  userId?: string;
 
   @IsString()
   @IsNotEmpty()
@@ -27,12 +38,12 @@ export class CreateSessionDto {
   @IsString()
   @IsNotEmpty()
   @ApiProperty({ required: true })
-  userName: string;
+  userName?: string;
 
   @IsString()
   @IsNotEmpty()
   @ApiProperty({ required: true })
-  password: string;
+  password?: string;
 
   @IsOptional()
   @IsString()
@@ -107,9 +118,4 @@ export class CreateSessionDto {
   @IsOptional()
   @ApiProperty({ required: false })
   token?: string;
-}
-
-export class getSessionDto {
-  @ApiProperty({ required: true })
-  token: string;
 }

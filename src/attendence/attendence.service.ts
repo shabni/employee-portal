@@ -87,21 +87,17 @@ export class AttendenceService {
 
   getUserAttendence(id: string) {
     return this.prisma.attendence.findMany({
-      orderBy: [
-        {
-          updatedAt: 'desc',
-        },
-      ],
+      select: {
+        attendenceDate: true,
+        attendenceId: true,
+        checkInTime: true,
+        checkOutTime: true,
+        userId: true,
+      },
+      orderBy: [{ updatedAt: 'desc' }],
       take: 7,
       where: {
-        AND: [
-          {
-            userId: id,
-            NOT: {
-              checkOutTime: null,
-            },
-          },
-        ],
+        AND: [{ userId: id, NOT: { checkOutTime: null } }],
       },
     });
   }

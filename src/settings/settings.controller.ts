@@ -52,11 +52,17 @@ export class SettingsController {
     return this.settingsService.updateRole(id, updateSettingDto);
   }
 
-  @Post('/upload')
+  @Post('/upload/:folderName')
   @UseInterceptors(
     FileInterceptor('photo', {
       storage: diskStorage({
-        destination: './uploads',
+        destination: (req, file, cb) => {
+          let fs = require('fs-extra');
+          let path = `./${req.params.folderName}`;
+          fs.mkdirsSync(path);
+
+          cb(null, path);
+        },
         filename: (req, file, cb) => {
           const filename: string =
             path.parse(file.originalname).name.replace(/\s/g, '') + uuidv4();
@@ -68,12 +74,11 @@ export class SettingsController {
   )
   uploadSingle(@UploadedFile() file) {
     let imgUrl = file.path.replace(/\\/g, '/');
-    imgUrl = imgUrl.substring(imgUrl.indexOf('uploads') + 8);
     return { imgUrl };
   }
 
-  @Get('/getProfileImage/:imgUrl')
-  gindProfileImage(@Res() res, @Param('imgUrl') imgUrl: string) {
-    return res.sendFile(join(process.cwd(), 'uploads/' + imgUrl));
+  @Get('/getProfileImage/profile/:imgUrl')
+  findProfileImage(@Res() res, @Param('imgUrl') imgUrl: string) {
+    return res.sendFile(join(process.cwd(), 'profile/' + imgUrl));
   }
 }

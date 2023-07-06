@@ -11,9 +11,10 @@ import { CustomSocketModule } from './custom-socket/custom-socket.module';
 import { TeamModule } from './team/team.module';
 import { TasksModule } from './tasks/tasks.module';
 import { SubtasksModule } from './subtasks/subtasks.module';
+import { UploadsModule } from './uploads/uploads.module';
 
 @Module({
-  imports: [PrismaModule, UserModule, AttendenceModule, AuthModule, SettingsModule, ReportsModule, CustomSocketModule, TeamModule, TasksModule, SubtasksModule],
+  imports: [PrismaModule, UserModule, AttendenceModule, AuthModule, SettingsModule, ReportsModule, CustomSocketModule, TeamModule, TasksModule, SubtasksModule, UploadsModule],
   controllers: [AppController],
   providers: [AppService],
 })

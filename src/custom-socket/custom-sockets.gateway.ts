@@ -6,7 +6,7 @@ import {
   OnGatewayDisconnect,
 } from '@nestjs/websockets';
 
-@WebSocketGateway()
+@WebSocketGateway({ cors: { origin: 'http://localhost:4200' } })
 export class CustomeSocketGateway
   implements OnGatewayConnection, OnGatewayDisconnect
 {

@@ -15,4 +15,7 @@ export class ResponseTaskTrackDto {
   @IsOptional()
   @ApiProperty({ required: true })
   taskTrackId?: string;
+
+  @ApiProperty({ required: false })
+  startDate?: bigint;
 }

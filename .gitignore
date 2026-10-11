@@ -1,6 +1,10 @@
 # compiled output
 /dist
 /node_modules
+/frontend/.angular/
+/frontend/dist/
+/frontend/out-tsc/
+/frontend/node_modules/
 /uploads
 /profile
 

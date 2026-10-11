@@ -24,9 +24,6 @@ export class CreatedSessionDto {
   @ApiProperty({ required: true })
   userName?: string;
 
-  @ApiProperty({ required: true })
-  password?: string;
-
   @ApiProperty({ required: false })
   fatherName?: string;
 

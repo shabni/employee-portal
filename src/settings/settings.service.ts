@@ -24,8 +24,8 @@ export class SettingsService {
 
   makePermissions(roles) {
     roles.forEach((element) => {
-      if (element.permission) {
-        element.permission = element.permission.split(',');
+      if (element.permissions) {
+        element.permissions = element.permissions.split(',');
       }
     });
 

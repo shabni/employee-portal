@@ -1,0 +1,14 @@
+<div class="app-shell">
+  <div class="scrim" [class.visible]="menuOpen" (click)="menuOpen = false"></div>
+  <aside class="sidebar" [class.open]="menuOpen">
+    <a class="brand" routerLink="/workspace/overview" (click)="menuOpen = false"><span class="brand-mark">E</span><span class="brand-copy"><strong>Employee Portal</strong><small>WORKSPACE</small></span></a>
+    <div class="workspace-switch"><span class="workspace-name"><strong>Acme Corporation</strong><small>Employee workspace</small></span></div>
+    <span class="nav-label">WORKSPACE</span>
+    <a *ngFor="let link of primaryLinks" class="nav-item" [routerLink]="['/workspace', link.route]" routerLinkActive="active" (click)="menuOpen = false">{{link.label}}</a>
+    <div class="sidebar-bottom"><div class="help-card"><strong>Need a hand?</strong><p>Reach out to your administrator for help with your workspace.</p></div><div class="profile-mini"><span class="avatar avatar-me">{{initials}}</span><span class="profile-name"><strong>{{session.profile?.firstName}} {{session.profile?.lastName}}</strong><small>{{session.profile?.designation || 'Employee'}}</small></span></div></div>
+  </aside>
+  <main class="main-area">
+    <header class="topbar"><button class="mobile-menu" aria-label="Toggle navigation" (click)="menuOpen = !menuOpen"></button><div class="breadcrumbs"><span>Workspace</span><span class="crumb-slash">/</span><strong>{{pageTitle}}</strong></div><div class="top-actions"><span class="api-indicator"><i></i>All systems operational</span><span class="top-divider"></span><span class="top-profile"><span class="avatar avatar-me">{{initials}}</span><span>{{session.profile?.firstName}}</span></span><button class="signout-button" (click)="signOut()">Sign out</button></div></header>
+    <section class="content"><router-outlet></router-outlet><footer class="page-footer"><span>Copyright 2026 Employee Portal</span><div><span>Privacy</span><span>Support</span><span class="footer-status"><i></i>Connected</span></div></footer></section>
+  </main>
+</div>

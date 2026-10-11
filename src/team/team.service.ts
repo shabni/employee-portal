@@ -11,6 +11,21 @@ export class TeamService {
 
   getTeamMembers(id: string) {
     return this.prisma.users.findMany({
+      select: {
+        userId: true,
+        fName: true,
+        lName: true,
+        userName: true,
+        roleId: true,
+        role: { select: { title: true, scale: true } },
+        emailOffice: true,
+        phone: true,
+        profileImage: true,
+        designation: true,
+        isLoggedIn: true,
+        isCheckedIn: true,
+        teamLeadId: true,
+      },
       where: {
         teamLeadId: id,
       },

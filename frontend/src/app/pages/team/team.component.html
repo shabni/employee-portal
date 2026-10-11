@@ -1,0 +1,64 @@
+<div class="welcome-row">
+  <div>
+    <p class="eyebrow">PEOPLE &amp; PROGRESS</p>
+    <h1>My team</h1>
+    <p class="subheading">Stay connected with your direct reports.</p>
+  </div>
+</div>
+
+<div class="notice" *ngIf="message">{{ message }}</div>
+
+<section class="panel team-panel">
+  <nav class="team-tabs" aria-label="Team information">
+    <button [class.selected]="tab === 'members'" (click)="changeTab('members')">Team members</button>
+    <button [class.selected]="tab === 'attendance'" (click)="changeTab('attendance')">Attendance</button>
+    <button [class.selected]="tab === 'reports'" (click)="changeTab('reports')">Reports</button>
+    <button [class.selected]="tab === 'progress'" (click)="changeTab('progress')">Task progress</button>
+  </nav>
+
+  <div class="team-toolbar" *ngIf="tab !== 'members'">
+    <label>Selected day<input type="date" [(ngModel)]="date" (change)="loadData()"></label>
+  </div>
+
+  <div *ngIf="tab === 'members'" class="team-members-panel">
+    <div class="compact-row" *ngFor="let m of members">
+      <span class="avatar avatar-person">{{ m.firstName[0] }}{{ m.lastName[0] }}</span>
+      <div class="member-identity">
+        <strong>{{ m.firstName }} {{ m.lastName }}</strong>
+        <p>{{ m.designation || m.role?.title || 'Employee' }}<span *ngIf="m.username"> · {{ m.username }}</span></p>
+      </div>
+      <span class="status-pill" [class.pill-active]="m.isLoggedIn">{{ m.isLoggedIn ? 'ONLINE' : 'ACTIVE' }}</span>
+    </div>
+    <div class="empty-inline" *ngIf="!members.length">No direct reports found.</div>
+  </div>
+
+  <div class="table-wrap" *ngIf="tab === 'attendance'">
+    <table><thead><tr><th>Employee</th><th>Check in</th><th>Check out</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr *ngFor="let r of rows"><td>{{ r.firstName }} {{ r.lastName }}</td><td>{{ r.checkInTime ? (r.checkInTime | date:'shortTime') : '-' }}</td><td>{{ r.checkOutTime ? (r.checkOutTime | date:'shortTime') : '-' }}</td><td>{{ r.checkInTime ? (r.checkOutTime ? 'Completed' : 'Checked in') : 'No record' }}</td></tr>
+        <tr *ngIf="busy"><td colspan="4" class="empty-inline">Loading team attendance…</td></tr>
+        <tr *ngIf="!busy && !rows.length"><td colspan="4" class="empty-inline">No team attendance for this date.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="table-wrap" *ngIf="tab === 'reports'">
+    <table><thead><tr><th>Employee</th><th>Report</th><th>Submitted</th></tr></thead>
+      <tbody>
+        <tr *ngFor="let r of rows"><td>{{ r.firstName }} {{ r.lastName }}</td><td>{{ r.description || 'No report submitted' }}</td><td>{{ r.reportDate ? (r.reportDate | date:'shortTime') : '-' }}</td></tr>
+        <tr *ngIf="busy"><td colspan="3" class="empty-inline">Loading team reports…</td></tr>
+        <tr *ngIf="!busy && !rows.length"><td colspan="3" class="empty-inline">No team reports for this date.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="table-wrap" *ngIf="tab === 'progress'">
+    <table><thead><tr><th>Employee</th><th>Task</th><th>Duration</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr *ngFor="let r of rows"><td>{{ r.firstName }} {{ r.lastName }}</td><td>{{ r.taskTitle || 'Task' }}</td><td>{{ formatDuration(r.duration) }}</td><td><span class="status-pill" [class.pill-active]="r.active">{{ r.active ? 'IN PROGRESS' : 'COMPLETE' }}</span></td></tr>
+        <tr *ngIf="busy"><td colspan="4" class="empty-inline">Loading team progress…</td></tr>
+        <tr *ngIf="!busy && !rows.length"><td colspan="4" class="empty-inline">No task progress for this date.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>

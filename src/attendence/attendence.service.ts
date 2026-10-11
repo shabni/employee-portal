@@ -44,6 +44,11 @@ export class AttendenceService {
       data: {
         attendenceId: MakeTimedIDUnique(),
         ...createAttendenceDto,
+        attendenceDate: BigInt(createAttendenceDto.attendenceDate),
+        checkInTime: BigInt(createAttendenceDto.checkInTime),
+        checkOutTime: createAttendenceDto.checkOutTime == null
+          ? null
+          : BigInt(createAttendenceDto.checkOutTime),
         ...datesForCreate(),
       },
     });
@@ -85,8 +90,8 @@ export class AttendenceService {
     } else throw new NotFoundException('Please check in first');
   }
 
-  getUserAttendence(id: string) {
-    return this.prisma.attendence.findMany({
+  async getUserAttendence(id: string) {
+    const records = await this.prisma.attendence.findMany({
       select: {
         attendenceDate: true,
         attendenceId: true,
@@ -100,12 +105,33 @@ export class AttendenceService {
         AND: [{ userId: id, NOT: { checkOutTime: null } }],
       },
     });
+
+    return records.map((record) => {
+      if (record.checkInTime == null || record.checkOutTime == null) {
+        return { ...record, duration: null };
+      }
+
+      const totalMinutes = Math.max(
+        0,
+        Number((record.checkOutTime - record.checkInTime) / BigInt(60)),
+      );
+      const hours = Math.floor(totalMinutes / 60);
+      const minutes = totalMinutes % 60;
+
+      return { ...record, duration: `${hours}h ${minutes}m` };
+    });
   }
 
   async update(id: string, updateAttendenceDto: UpdateAttendenceDto) {
     const resp = await this.prisma.attendence.update({
       where: { attendenceId: id },
-      data: { ...updateAttendenceDto, updatedAt: unixTimestamp() },
+      data: {
+        ...updateAttendenceDto,
+        ...(updateAttendenceDto.checkOutTime !== undefined && updateAttendenceDto.checkOutTime !== null
+          ? { checkOutTime: BigInt(updateAttendenceDto.checkOutTime) }
+          : {}),
+        updatedAt: unixTimestamp(),
+      },
     });
 
     return resp;

@@ -9,6 +9,9 @@ import {
 
 export class ResponseUserDto {
   @ApiProperty({ required: true })
+  userId?: string;
+
+  @ApiProperty({ required: true })
   fName?: string;
 
   @ApiProperty({ required: false })
@@ -21,16 +24,13 @@ export class ResponseUserDto {
   userName?: string;
 
   @ApiProperty({ required: true })
-  password?: string;
-
-  @ApiProperty({ required: true })
   joiningDate?: bigint;
+
+  @ApiProperty({ required: false })
+  nic?: string;
 
   @ApiProperty({ required: true })
   phone?: number;
-
-  @ApiProperty({ required: true })
-  nic?: string;
 
   @ApiProperty({ required: false })
   emailOffice?: string;
@@ -49,4 +49,10 @@ export class ResponseUserDto {
 
   @ApiProperty({ required: false })
   teamLeadId?: string;
+
+  @ApiProperty({ required: false })
+  isLoggedIn?: boolean;
+
+  @ApiProperty({ required: false })
+  isCheckedIn?: boolean;
 }

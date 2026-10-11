@@ -34,7 +34,7 @@ export class AuthService {
         user.password === LogInDto.password
       ) {
         const token = await this.logInToken(user.userId, user.userName);
-        this.updateUser(user.userId, { isLoggedIn: true });
+        await this.updateUser(user.userId, { isLoggedIn: true });
 
         const session = await this.getUserSession(user.userId);
 
@@ -103,16 +103,19 @@ export class AuthService {
 
     if (session) {
       data.session = true;
-      data.profile = session;
+      const { password, ...safeProfile } = session;
+      data.profile = safeProfile;
 
       if (session.isCheckedIn) {
         let userAttendence = await this.findUserAttendenceTime(session.userId);
-        data.profile.attendenceDate = userAttendence.attendenceDate;
-        data.profile.checkInTime = userAttendence.checkInTime;
+        data.profile.attendenceDate = userAttendence?.attendenceDate;
+        data.profile.checkInTime = userAttendence?.checkInTime;
       }
-      let permissions = await this.findRole(data.profile.roleId);
-      if (permissions.permissions)
-        data.permissions = this.makePermissions(permissions.permissions);
+      if (data.profile.roleId) {
+        let permissions = await this.findRole(data.profile.roleId);
+        if (permissions.permissions)
+          data.permissions = this.makePermissions(permissions.permissions);
+      }
     }
 
     return data;
@@ -166,18 +169,21 @@ export class AuthService {
       },
     });
 
-    data.profile = session;
-    let permissions = await this.findRole(data.profile.roleId);
-    if (permissions.permissions)
-      data.permissions = this.makePermissions(permissions.permissions);
+    const { password, ...safeProfile } = session;
+    data.profile = safeProfile;
+    if (data.profile.roleId) {
+      let permissions = await this.findRole(data.profile.roleId);
+      if (permissions.permissions)
+        data.permissions = this.makePermissions(permissions.permissions);
+    }
 
     if (data.profile.isCheckedIn) {
       let userAttendence = await this.findUserAttendenceTime(
         data.profile.userId,
       );
-      data.profile.isCheckedIn = userAttendence['isCheckedIn'];
-      data.profile.attendenceDate = userAttendence.attendenceDate;
-      data.profile.checkInTime = userAttendence.checkInTime;
+      data.profile.isCheckedIn = !!userAttendence;
+      data.profile.attendenceDate = userAttendence?.attendenceDate;
+      data.profile.checkInTime = userAttendence?.checkInTime;
     }
 
     return data;

@@ -61,17 +61,17 @@ export class TasksService {
       where: { userId: id, isActive: true },
     });
 
-    activeTaskIds.forEach((element) => {
+    await Promise.all(activeTaskIds.map((element) =>
       this.updateTaskTrack(element.taskTrackId, {
         isActive: false,
         endDate: unixTimestamp(),
         duration: unixTimestamp() - Number(element.startDate),
-      });
-    });
+      }),
+    ));
   }
 
   async createTaskTrack(createTaskTrackDto: CreateTaskTrackDto) {
-    this.makeTasksInactive(createTaskTrackDto.userId);
+    await this.makeTasksInactive(createTaskTrackDto.userId);
 
     let dataToinput: Prisma.TaskTracksUncheckedCreateInput = {
       taskTrackId: MakeTimedIDUnique(),
@@ -111,6 +111,7 @@ export class TasksService {
       select: {
         taskTrackId: true,
         taskId: true,
+        startDate: true,
       },
       where: {
         userId: id,
@@ -124,6 +125,7 @@ export class TasksService {
       let taskTrackId = task.taskTrackId;
       responseTask = await this.getTaskDetails(task.taskId);
       responseTask.taskTrackId = taskTrackId;
+      responseTask.startDate = task.startDate;
     }
 
     return responseTask;
@@ -148,7 +150,7 @@ export class TasksService {
     });
 
     if (startDate) {
-      this.updateTaskTrack(activeToggleDto.taskTrackId, {
+      await this.updateTaskTrack(activeToggleDto.taskTrackId, {
         isActive: false,
         endDate: unixTimestamp(),
         duration: unixTimestamp() - Number(startDate.startDate),

@@ -17,6 +17,7 @@ export class ReportsService {
       data: {
         reportId: MakeTimedIDUnique(),
         ...createReportDto,
+        reportDate: BigInt(createReportDto.reportDate),
         ...datesForCreate(),
       },
     });
@@ -28,6 +29,7 @@ export class ReportsService {
         description: true,
         userId: true,
         reportDate: true,
+        updatedAt: true,
         reportId: true,
       },
       orderBy: [{ updatedAt: 'desc' }],
@@ -39,7 +41,13 @@ export class ReportsService {
   async updateReport(id: string, updateReportDto: UpdateReportDto) {
     const resp = await this.prisma.reports.update({
       where: { reportId: id },
-      data: { ...updateReportDto, updatedAt: unixTimestamp() },
+      data: {
+        ...updateReportDto,
+        ...(updateReportDto.reportDate !== undefined
+          ? { reportDate: BigInt(updateReportDto.reportDate) }
+          : {}),
+        updatedAt: unixTimestamp(),
+      },
     });
 
     return resp;

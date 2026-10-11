@@ -12,22 +12,24 @@ import { UpdateSubtaskDto } from './dto/update-subtask.dto';
 export class SubtasksService {
   constructor(private prisma: PrismaService) {}
   async createSubTasks(bulkSubtaskDto: BulkSubtaskDto[]) {
-    bulkSubtaskDto.forEach((subtask) => {
-      if (subtask.subTaskId) {
-        this.updateSubtask(subtask.subTaskId, { title: subtask.title });
-      }
-    });
+    const updates = bulkSubtaskDto.filter((subtask) => subtask.subTaskId);
+    await Promise.all(
+      updates.map((subtask) =>
+        this.updateSubtask(subtask.subTaskId, { title: subtask.title }),
+      ),
+    );
 
-    await this.prisma.subTasks.createMany({
-      data: bulkSubtaskDto.map((subtask) => {
-        if (!subtask.subTaskId)
-          return {
-            subTaskId: MakeTimedIDUnique(),
-            ...subtask,
-            ...datesForCreate(),
-          };
-      }),
-    });
+    const additions = bulkSubtaskDto.filter((subtask) => !subtask.subTaskId);
+    if (additions.length) {
+      await this.prisma.subTasks.createMany({
+        data: additions.map(({ title, taskId }) => ({
+          subTaskId: MakeTimedIDUnique(),
+          title,
+          taskId,
+          ...datesForCreate(),
+        })),
+      });
+    }
   }
 
   async getAllSubTasks(id: string) {
